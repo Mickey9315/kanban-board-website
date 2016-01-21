@@ -1,6 +1,6 @@
 ## TaskBan
 ***
-TaskBan is a kanban board web application made with **AngularJS**, **NodeJS**, **ExpressJS** and **MongoDB**, using libraries such as *Angular Material* for enhance the user interface and *Dragula* for the drag and drop.
+TaskBan is a kanban board web application made with **AngularJS**, **NodeJS**, **ExpressJS** and **MongoDB**, using libraries such as [*Angular Material*](https://material.angularjs.org/latest/) for enhance the user interface and [*Dragula*](http://bevacqua.github.io/angular-dragula/) for the drag and drop.
 
 ![Application image](img/taskban.png)
 
