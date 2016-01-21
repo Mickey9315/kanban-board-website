@@ -1,0 +1,29 @@
+{
+  "name": "kanban-board",
+  "version": "0.0.0",
+  "description": "Kanban Board made with AngularJS, NodeJS, ExpressJS and MongoDB",
+  "main": "app.js",
+  "dependencies": {
+    "angular": "*",
+    "angular-animate": "*",
+    "angular-aria": "*",
+    "angular-dragula": "*",
+    "angular-material": "*",
+    "angular-messages": "^1.4.8",
+    "body-parser": "*",
+    "express": "*",
+    "mongoose": "^4.2.10"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/juangm_iternox/kanban-board.git"
+  },
+  "author": "Juan Granadilla",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/juangm_iternox/kanban-board#readme"
+}

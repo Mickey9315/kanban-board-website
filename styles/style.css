@@ -1,0 +1,93 @@
+body, html {
+  font-family: 'Roboto', sans-serif;
+}
+
+md-card {
+  background-color: #FFF;
+  cursor: pointer;
+  cursor: move;
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
+}
+
+md-list {
+  padding: 5dp;
+  margin: 2%;
+  height: 100%;
+}
+
+md-whiteframe {
+  color: #FFF;
+  text-align: center;
+  margin: 12px;
+}
+
+#ready-title {
+  background-color: #2196F3;
+}
+
+#inprogress-title {
+  background-color: #4CAF50;
+}
+
+#paused-title {
+  background-color: #E91E63;
+}
+
+#testing-title {
+  background-color: #F44336;
+}
+
+#done-title {
+  background-color: #FFC107;
+}
+
+.kanban{
+  height: 100%;
+}
+
+.ready, .inprogress, .paused, .testing, .done {
+  width: 20%;
+  min-width: 180px;
+}
+
+.ready {
+  background-color: rgba(59,75,84, 0.2);
+}
+
+.inprogress {
+  background-color: rgba(96, 125, 139, 0.2);
+}
+
+.paused {
+  background-color: rgba(59,75,84, 0.2);
+}
+
+.testing {
+  background-color: rgba(96, 125, 139, 0.2);
+}
+
+.done {
+  background-color: rgba(59,75,84, 0.2);
+}
+
+.ready-card {
+  border-left: 6px solid #2196F3;
+}
+
+.inprogress-card {
+  border-left: 6px solid #4CAF50;
+}
+
+.paused-card {
+  border-left: 6px solid #E91E63;
+}
+
+.testing-card {
+  border-left: 6px solid #F44336;
+}
+
+.done-card {
+  border-left: 6px solid #FFC107;
+}
