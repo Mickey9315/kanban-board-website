@@ -1,7 +1,7 @@
 {
-  "name": "kanban-board",
+  "name": "TaskBan",
   "version": "0.0.0",
-  "description": "Kanban Board made with AngularJS, NodeJS, ExpressJS and MongoDB",
+  "description": "kanban board web application made with AngularJS, NodeJS, ExpressJS and MongoDB",
   "main": "app.js",
   "dependencies": {
     "angular": "*",
@@ -23,7 +23,7 @@
     "type": "git",
     "url": "git+ssh://git@bitbucket.org/juangm_iternox/kanban-board.git"
   },
-  "author": "Juan Granadilla",
-  "license": "ISC",
-  "homepage": "https://bitbucket.org/juangm_iternox/kanban-board#readme"
+  "author": "Juan José Granadilla Manzano",
+  "license": "GPLv3",
+  "homepage": "https://github.com/juangranadilla/TaskBan-web/"
 }
