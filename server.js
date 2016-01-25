@@ -3,7 +3,9 @@ var app = express();
 var bodyParser = require("body-parser");
 var router = express.Router();
 var mongoCard = require("./models/card");
+var morgan = require('morgan');
 
+app.use(morgan("dev"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({"extended" : false}));
 

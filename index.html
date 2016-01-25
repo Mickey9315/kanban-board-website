@@ -36,13 +36,13 @@
       <!-- Left sidenav -->
       <md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
         <md-toolbar class="md-theme-light">
-          <h1 class="md-toolbar-tools">Settings</h1>
+          <h1 class="md-toolbar-tools">User information</h1>
         </md-toolbar>
       </md-sidenav>
       <!-- Ready cards -->
       <div class='ready'>
         <md-whiteframe class="md-whiteframe-1dp" layout layout-align="center center" id='ready-title'>
-          <h3>Tareas por hacer</h3>
+          <h3>To do</h3>
         </md-whiteframe>
         <md-list dragula="'first-bag'" dragula-model='readyCards'>
           <md-card class='ready-card' ng-repeat='card in readyCards'>
@@ -53,7 +53,7 @@
       <!-- In progress cards -->
       <div class='inprogress'>
         <md-whiteframe class="md-whiteframe-1dp" layout layout-align="center center" id='inprogress-title'>
-          <h3>En progreso</h3>
+          <h3>In progress</h3>
         </md-whiteframe>
         <md-list dragula="'first-bag'" dragula-model='inprogressCards'>
           <md-card class='inprogress-card' ng-repeat='card in inprogressCards'>
@@ -64,7 +64,7 @@
       <!-- Paused cards -->
       <div class='paused'>
         <md-whiteframe class="md-whiteframe-1dp" layout layout-align="center center" id='paused-title'>
-          <h3>Pausadas</h3>
+          <h3>Paused</h3>
         </md-whiteframe>
         <md-list dragula="'first-bag'" dragula-model='pausedCards'>
           <md-card class='paused-card' ng-repeat='card in pausedCards'>
@@ -75,7 +75,7 @@
       <!-- Testing cards -->
       <div class='testing'>
         <md-whiteframe class="md-whiteframe-1dp" layout layout-align="center center" id='testing-title'>
-          <h3>Probando</h3>
+          <h3>Testing</h3>
         </md-whiteframe>
         <md-list dragula="'first-bag'" dragula-model='testingCards'>
           <md-card class='testing-card' ng-repeat='card in testingCards'>
@@ -86,7 +86,7 @@
       <!-- Done cards -->
       <div class='done'>
         <md-whiteframe class="md-whiteframe-1dp" layout layout-align="center center" id='done-title'>
-          <h3>Hechas</h3>
+          <h3>Done</h3>
         </md-whiteframe>
         <md-list dragula="'first-bag'" dragula-model='doneCards'>
           <md-card class='done-card' ng-repeat='card in doneCards'>
@@ -101,7 +101,7 @@
         <form>
         <md-toolbar>
           <div class="md-toolbar-tools">
-            <h2>Nueva tarea</h2>
+            <h2>New task</h2>
             <span flex></span>
             <md-button class="md-icon-button" ng-click="cancel()">
               <md-icon md-svg-src="img/icons/ic_clear_white_24px.svg" aria-label="Close dialog"></md-icon>
@@ -112,7 +112,7 @@
           <div class="md-dialog-content">
             <md-content layout-padding class="autoScroll">
               <md-input-container>
-                <label>Descripción</label>
+                <label>Description</label>
                 <input type="text" ng-model="inputDialog.description">
               </md-input-container>
             </md-content>
@@ -120,7 +120,7 @@
         </md-dialog-content>
         <div class="md-actions" layout="row">
           <md-button ng-click="answer()">
-            Aceptar
+            OK
           </md-button>
         </div>
         </form>

@@ -4,15 +4,16 @@
   "description": "kanban board web application made with AngularJS, NodeJS, ExpressJS and MongoDB",
   "main": "app.js",
   "dependencies": {
-    "angular": "^1.4.8",
-    "angular-animate": "^1.4.8",
-    "angular-aria": "^1.4.8",
-    "angular-dragula": "^1.1.6",
-    "angular-material": "^0.11.4",
-    "angular-messages": "^1.4.8",
-    "body-parser": "^1.14.1",
+    "angular": "^1.4.9",
+    "angular-animate": "^1.4.9",
+    "angular-aria": "^1.4.9",
+    "angular-dragula": "^1.2.2",
+    "angular-material": "^1.0.2",
+    "angular-messages": "^1.4.9",
+    "body-parser": "^1.14.2",
     "express": "^4.13.3",
-    "mongoose": "^4.2.10"
+    "mongoose": "^4.3.6",
+    "morgan": "^1.6.1"
   },
   "devDependencies": {},
   "scripts": {
