@@ -10,6 +10,7 @@
     "angular-dragula": "^1.2.2",
     "angular-material": "^1.0.2",
     "angular-messages": "^1.4.9",
+    "angular-route": "^1.4.9",
     "body-parser": "^1.14.2",
     "express": "^4.13.3",
     "mongoose": "^4.3.6",

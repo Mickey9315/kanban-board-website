@@ -4,6 +4,8 @@ TaskBan is a kanban board web application made with **AngularJS**, **NodeJS**, *
 
 ![Application image](img/taskban.png)
 
+> This is a work in progress
+
 ### Requirements
 
 If you want to test the application, follow the steps below:
@@ -11,6 +13,8 @@ If you want to test the application, follow the steps below:
 * Install and configure *NodeJS* and *MongoDB*.
 * Execute ``npm install`` to install the dependencies.
 * Start the web application with ``node server.js``.
+
+
 
 ### License
 ```

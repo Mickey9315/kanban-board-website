@@ -1,26 +1,43 @@
 body, html {
   font-family: 'Roboto', sans-serif;
-}
-
-md-card {
-  background-color: #FFF;
-  cursor: pointer;
-  cursor: move;
-  cursor: grab;
-  cursor: -moz-grab;
-  cursor: -webkit-grab;
+  -webkit-font-smoothing: antialiased;
 }
 
 md-list {
   padding: 5dp;
   margin: 2%;
-  height: 100%;
+  background-color: rgba(96, 125, 139, 0.14);
+  border-radius: 5px;
 }
 
 md-whiteframe {
   color: #FFF;
   text-align: center;
   margin: 12px;
+  border-radius: 5px;
+}
+
+#loginlayout {
+  height:100%;
+  background-color: rgba(96, 125, 139, 0.14);
+}
+
+#loginbox {
+  text-align: center;
+  margin: 12px;
+  border-radius: 5px;
+  height: 50%;
+  width: 35%;
+  min-height: 30%;
+  min-width: 30%;
+}
+
+#kanbanlayout {
+  height:100%;
+}
+
+md-toolbar-tools {
+  border-radius: 5px;
 }
 
 #ready-title {
@@ -52,24 +69,21 @@ md-whiteframe {
   min-width: 180px;
 }
 
-.ready {
-  background-color: rgba(59,75,84, 0.2);
-}
-
-.inprogress {
+.ready, .paused, .done {
   background-color: rgba(96, 125, 139, 0.2);
 }
 
-.paused {
-  background-color: rgba(59,75,84, 0.2);
+.inprogress, .testing {
+  background-color: rgba(96, 125, 139, 0.3);
 }
 
-.testing {
-  background-color: rgba(96, 125, 139, 0.2);
-}
-
-.done {
-  background-color: rgba(59,75,84, 0.2);
+.ready-card, .inprogress-card, .paused-card, .testing-card, .done-card {
+  background-color: #FFF;
+  cursor: pointer;
+  cursor: move;
+  cursor: grab;
+  cursor: -moz-grab;
+  cursor: -webkit-grab;
 }
 
 .ready-card {

@@ -1,0 +1,115 @@
+<!-- Kanban board -->
+<div layout="column" class='kanban' ng-cloak>
+  <!-- Toolbar -->
+  <md-toolbar layout="row">
+    <div class="md-toolbar-tools">
+      <md-button class="md-icon-button" aria-label="Settings" ng-click='toggleLeft()'>
+        <md-icon md-svg-icon="img/icons/ic_menu_white_24px.svg"></md-icon>
+      </md-button>
+      <h2>
+        <span>TaskBan</span>
+      </h2>
+      <span flex></span>
+      <md-button class="md-icon-button" aria-label="AddNewCard" ng-click="AddNewCardDialog($event)">
+        <md-icon md-svg-icon="img/icons/ic_add_white_24px.svg"></md-icon>
+      </md-button>
+      <md-button class="md-icon-button" aria-label="More">
+        <md-icon md-svg-icon="img/icons/ic_more_vert_white_24px.svg"></md-icon>
+      </md-button>
+    </div>
+  </md-toolbar>
+  <div id="kanbanlayout" layout="row">
+    <!-- Left sidenav -->
+    <md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
+      <md-toolbar class="md-theme-light">
+        <h1 class="md-toolbar-tools">User information</h1>
+      </md-toolbar>
+    </md-sidenav>
+    <!-- Ready cards -->
+    <div flex class='ready'>
+      <md-whiteframe class="md-whiteframe-1dp" layout layout-align="center center" id='ready-title'>
+        <h3>To do</h3>
+      </md-whiteframe>
+      <md-list dragula="'first-bag'" dragula-model='readyCards'>
+        <md-card class='ready-card' ng-repeat='card in readyCards'>
+          <md-card-content ng-bind='card.cardContent'></md-card-content>
+        </md-card>
+      </md-list>
+    </div>
+    <!-- In progress cards -->
+    <div flex class='inprogress'>
+      <md-whiteframe class="md-whiteframe-1dp" layout layout-align="center center" id='inprogress-title'>
+        <h3>In progress</h3>
+      </md-whiteframe>
+      <md-list dragula="'first-bag'" dragula-model='inprogressCards'>
+        <md-card class='inprogress-card' ng-repeat='card in inprogressCards'>
+          <md-card-content ng-bind='card.cardContent'></md-card-content>
+        </md-card>
+      </md-list>
+    </div>
+    <!-- Paused cards -->
+    <div flex class='paused'>
+      <md-whiteframe class="md-whiteframe-1dp" layout layout-align="center center" id='paused-title'>
+        <h3>Paused</h3>
+      </md-whiteframe>
+      <md-list dragula="'first-bag'" dragula-model='pausedCards'>
+        <md-card class='paused-card' ng-repeat='card in pausedCards'>
+          <md-card-content ng-bind='card.cardContent'></md-card-content>
+        </md-card>
+      </md-list>
+    </div>
+    <!-- Testing cards -->
+    <div flex class='testing'>
+      <md-whiteframe class="md-whiteframe-1dp" layout layout-align="center center" id='testing-title'>
+        <h3>Testing</h3>
+      </md-whiteframe>
+      <md-list dragula="'first-bag'" dragula-model='testingCards'>
+        <md-card class='testing-card' ng-repeat='card in testingCards'>
+          <md-card-content ng-bind='card.cardContent'></md-card-content>
+        </md-card>
+      </md-list>
+    </div>
+    <!-- Done cards -->
+    <div flex class='done'>
+      <md-whiteframe class="md-whiteframe-1dp" layout layout-align="center center" id='done-title'>
+        <h3>Done</h3>
+      </md-whiteframe>
+      <md-list dragula="'first-bag'" dragula-model='doneCards'>
+        <md-card class='done-card' ng-repeat='card in doneCards'>
+          <md-card-content ng-bind='card.cardContent'></md-card-content>
+        </md-card>
+      </md-list>
+    </div>
+  </div>
+  <!-- Custom dialog -->
+  <script type='text/ng-template' id='dialog1.tmpl.html'>
+    <md-dialog aria-label="Nueva tarjeta"  ng-cloak>
+      <form>
+      <md-toolbar>
+        <div class="md-toolbar-tools">
+          <h2>New task</h2>
+          <span flex></span>
+          <md-button class="md-icon-button" ng-click="cancel()">
+            <md-icon md-svg-src="img/icons/ic_clear_white_24px.svg" aria-label="Close dialog"></md-icon>
+          </md-button>
+        </div>
+      </md-toolbar>
+      <md-dialog-content style="max-width:800px;max-height:810px;min-width:300px;min-height:100px">
+        <div class="md-dialog-content">
+          <md-content layout-padding class="autoScroll">
+            <md-input-container>
+              <label>Description</label>
+              <input type="text" ng-model="inputDialog.description">
+            </md-input-container>
+          </md-content>
+        </div>
+      </md-dialog-content>
+      <div class="md-actions" layout="row">
+        <md-button ng-click="answer()">
+          OK
+        </md-button>
+      </div>
+      </form>
+    </md-dialog>
+  </script>
+</div>
