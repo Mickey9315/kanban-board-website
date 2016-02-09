@@ -1,5 +1,7 @@
 (function() {
 
+//WORK IN PROGRESS
+
   var loginFactory = function($http) {
     var factory = {};
 

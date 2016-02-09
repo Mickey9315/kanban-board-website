@@ -12,6 +12,10 @@
         controller: 'loginController',
         templateUrl: 'views/login.html'
       })
+      .when('/register', {
+        controller: 'loginController',
+        templateUrl: 'views/register.html'
+      })
       .when('/kanban', {
         controller: 'kanbanController',
         templateUrl: 'views/kanban.html'

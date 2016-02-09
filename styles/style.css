@@ -26,10 +26,8 @@ md-whiteframe {
   text-align: center;
   margin: 12px;
   border-radius: 5px;
-  height: 50%;
-  width: 35%;
-  min-height: 30%;
-  min-width: 30%;
+  height: 330px;
+  width: 360px;
 }
 
 #kanbanlayout {

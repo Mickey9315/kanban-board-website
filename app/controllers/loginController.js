@@ -4,6 +4,12 @@
     $scope.login = function() {
       $location.path('/kanban');
     };
+    $scope.register = function() {
+      $location.path('/register');
+    };
+    $scope.goBackLogin = function() {
+      $location.path('/login');
+    };
   };
 
   loginController.$inject = ['$scope', '$location'];
