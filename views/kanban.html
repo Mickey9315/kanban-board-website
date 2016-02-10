@@ -3,6 +3,7 @@
   <!-- Toolbar -->
   <md-toolbar layout="row">
     <div class="md-toolbar-tools">
+      <!-- Open left drawer -->
       <md-button class="md-icon-button" aria-label="Settings" ng-click='toggleLeft()'>
         <md-icon md-svg-icon="img/icons/ic_menu_white_24px.svg"></md-icon>
       </md-button>
@@ -10,12 +11,25 @@
         <span>TaskBan</span>
       </h2>
       <span flex></span>
+      <!-- Add new card -->
       <md-button class="md-icon-button" aria-label="AddNewCard" ng-click="AddNewCardDialog($event)">
         <md-icon md-svg-icon="img/icons/ic_add_white_24px.svg"></md-icon>
       </md-button>
-      <md-button class="md-icon-button" aria-label="More">
-        <md-icon md-svg-icon="img/icons/ic_more_vert_white_24px.svg"></md-icon>
-      </md-button>
+      <!-- Options menu -->
+      <md-menu>
+        <md-button class="md-icon-button" aria-label="More" ng-click="$mdOpenMenu($event)">
+          <md-icon md-svg-icon="img/icons/ic_more_vert_white_24px.svg"></md-icon>
+        </md-button>
+        <md-menu-content width="6">
+          <!-- Logout -->
+          <md-menu-item>
+            <md-button ng-click="logout()">
+              <md-icon md-svg-icon="img/icons/ic_exit_to_app_black_24px.svg"></md-icon>
+              Logout
+            </md-button>
+          </md-menu-item>
+        </md-menu-content>
+        </md-menu>
     </div>
   </md-toolbar>
   <div id="kanbanlayout" layout="row">

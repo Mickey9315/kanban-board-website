@@ -1,6 +1,6 @@
 (function() {
 
-  var kanbanController = function($scope, $mdSidenav, $log, $mdDialog, $mdToast, kanbanFactory, dragulaService) {
+  var kanbanController = function($scope, $mdSidenav, $log, $mdDialog, $mdToast, $location, kanbanFactory, dragulaService) {
 
     //Card arrays
     $scope.readyCards = [];
@@ -80,6 +80,11 @@
       });
     };
 
+    //Logout and go back to login screen
+    $scope.logout = function() {
+      $location.path('/login');
+    }
+
     //Show the dialog to create a new card
     $scope.AddNewCardDialog = function(ev) {
       $mdDialog.show({
@@ -119,7 +124,7 @@
     $scope.getCards(); //Get all cards when you enter or refresh the application
   };
 
-  kanbanController.$inject = ['$scope', '$mdSidenav', '$log', '$mdDialog', '$mdToast', 'kanbanFactory', 'dragulaService'];
+  kanbanController.$inject = ['$scope', '$mdSidenav', '$log', '$mdDialog', '$mdToast', '$location', 'kanbanFactory', 'dragulaService'];
 
   angular.module('kanban-board')
     .controller('kanbanController', kanbanController);
