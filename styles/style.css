@@ -17,10 +17,6 @@ md-whiteframe {
   border-radius: 5px;
 }
 
-.container {
-  overflow: hidden;
-}
-
 .loginlayout {
   position: fixed;
   left:0;
