@@ -1,14 +1,8 @@
-var mongoose = require("mongoose");
-mongoose.connect('mongodb://localhost:27017/kanbanDB');
+var mongoose = require('mongoose');
+var Schema = mongoose.Schema;
 
-// create instance of Schema
-var mongoSchema = mongoose.Schema;
-
-// create schema
-var cardSchema = {
-  "cardContent" : String,
-  "cardCategory" : String
-};
-
-// create model if not exists.
-module.exports = mongoose.model('card', cardSchema);
+// set up the card model (kanban task)
+module.exports = mongoose.model('card', new Schema({
+	cardContent: String,
+	cardCategory: String
+}));

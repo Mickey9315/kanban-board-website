@@ -1,57 +1,115 @@
+//Packages, models and configurations
 var express = require('express');
 var app = express();
 var bodyParser = require("body-parser");
 var router = express.Router();
-var mongoCard = require("./models/card");
 var morgan = require('morgan');
+var mongoose = require('mongoose');
+var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
+var config = require('./config'); // get our config file
+var Card = require("./models/card");
+var User = require('./models/user'); // get our mongoose model
 
-app.use(morgan("dev"));
+//Configuration
+var port = process.env.PORT || 8080; // used to create, sign, and verify tokens
+mongoose.connect(config.database); // connect to database
+app.set('secret', config.secret); // secret variable
+app.use(morgan("dev")); //log the requests to the console
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({"extended" : false}));
+
+/*===========================
+          User API
+============================*/
+
+//login with existing user
+router.post('/authenticate', function(req, res) {
+  User.findOne({
+    name: req.body.name
+  }, function(err, user) {
+		if (err) throw err;
+		if (!user) { //If user does not exists
+			res.json({ "success": false, "message": 'Authentication failed. User not found.' });
+		} else if (user) { //If user exists
+			if (user.password != req.body.password) { //Check if password matches
+				res.json({ "success": false, "message": 'Authentication failed. Wrong password.' });
+			} else {
+				//if user is found and password is right, create a token
+				var token = jwt.sign(user, app.get('secret'), {
+					expiresInMinutes: 1440 //expires in 24 hours
+				});
+				res.json({ "success": true, "message": 'Successfully authenticated', "token": token });
+			}
+		}
+	});
+});
+
+//register a new user
+router.post('/register', function(req, res) {
+  User.findOne({
+    name: req.body.name
+  }, function(err, user) {
+		if (err) throw err;
+		if (!user) { //If user does not exists
+    	var newUser = new User({ name: req.body.name, password: req.body.password });
+    	newUser.save(function(err) {
+    		if (err) throw err;
+    		console.log('User saved successfully');
+    		res.json({ "success": true, "message": 'User registered successfully' });
+    	});
+		} else if (user) { //If user exists
+			res.json({ "success": false, "message": 'Registration failed. User already exists.' });
+		}
+	});
+});
+
+/*===========================
+          Cards API
+============================*/
 
 //GET and POST
 router.route("/cards")
   .get(function(req, res) { //Get all cards
-    mongoCard.find(function(err, cards) {
+    Card.find(function(err, cards) {
       if(err) {
-        response = {"error" : true, "message" : "Error finding cards"};
+        response = {"success": false, "message": "Error finding cards"};
         res.json(response);
       } else {
-        response = {"error" : false, "message" : cards};
+        response = {"success": true, "message": cards};
         res.json(response);
       }
     });
   })
   .post(function(req, res) { //Create new card
-    mongoCard.create({cardContent: req.body.cardContent, cardCategory: req.body.cardCategory},
+    Card.create({cardContent: req.body.cardContent, cardCategory: req.body.cardCategory},
       function(err, createdCard) {
         if(err) {
-          response = {"error" : true, "message" : "Error creating card"};
+          response = {"success": false, "message": "Error creating card"};
           res.json(response);
         } else {
-          response = {"error" : false, "message" : createdCard};
+          response = {"success": true, "message": createdCard};
           res.json(response);
         }
       });
   });
 
-//GET, PUT and DELETE
+//GET, PUT and DELETE by ID
 router.route('/cards/:id')
   .get(function(req,res){ //Get specific card by ID
-    mongoCard.findById(req.params.id, function(err, card){
+    Card.findById(req.params.id, function(err, card){
       if(err) {
-        response = {"error" : true, "message" : "Card not found"};
+        response = {"success": false, "message": "Card not found"};
         res.json(response);
       } else {
-        response = {"error" : false, "message" : card};
+        response = {"success": true, "message": card};
         res.json(response);
       }
     });
   })
   .put(function(req,res){ //Update card by ID
-    mongoCard.findById(req.params.id, function(err, card){
+    Card.findById(req.params.id, function(err, card){
       if(err) {
-        response = {"error" : true, "message" : "Card not found"};
+        response = {"success": false, "message": "Card not found"};
         res.json(response);
       } else {
         if(req.body.cardContent !== undefined) {
@@ -62,28 +120,28 @@ router.route('/cards/:id')
         }
         card.save(function(err, savedCard){
           if(err) {
-            response = {"error" : true, "message" : "Error saving card"};
+            response = {"success": false, "message": "Error saving card"};
             res.json(response);
           } else {
-            response = {"error" : false, "message" : savedCard};
+            response = {"success": true, "message": savedCard};
             res.json(response);
           }
-        })
+        });
       }
     });
   })
   .delete(function(req,res){ //Remove card by ID
-    mongoCard.findById(req.params.id, function(err, card){
+    Card.findById(req.params.id, function(err, card){
       if(err) {
-        response = {"error" : true, "message" : "Card not found"};
+        response = {"success": false, "message": "Card not found"};
         res.json(response);
       } else {
-        mongoCard.remove({_id : req.params.id},function(err){
+        Card.remove({_id : req.params.id},function(err){
           if(err) {
-            response = {"error" : true, "message" : "Error removing card"};
+            response = {"success": false, "message": "Error removing card"};
             res.json(response);
           } else {
-            response = {"error" : false, "message" : "Card with id = "+req.params.id+" deleted"};
+            response = {"success": true, "message": "Card with id = "+req.params.id+" deleted"};
             res.json(response);
           }
         });
@@ -91,7 +149,7 @@ router.route('/cards/:id')
     });
   });
 
+//Start the server
 app.use(express.static(__dirname + '/'), router);
-app.listen(8080);
-
-console.log('Magic happens on port 8080');
+app.listen(port);
+console.log('Magic happens at http://localhost:' + port);

@@ -45,6 +45,11 @@ md-whiteframe {
   width: 360px;
 }
 
+.logintoolbar {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
 #kanbanlayout {
   height:100%;
 }
