@@ -1,6 +1,6 @@
 module.exports = {
 
-	'secret': 'olakase',
+	'secret': 'bestkanbanboardever',
 	'database': 'mongodb://localhost:27017/kanbanDB'
 
 };

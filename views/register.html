@@ -1,7 +1,7 @@
 <div class="loginlayout" layout="column" layout-align="center center" ng-cloak>
 </div>
 <!-- Login form -->
-<md-card class="loginbox">
+<md-card class="registerbox">
   <md-toolbar class="logintoolbar">
     <div class="md-toolbar-tools" layout-align="center center">
       <h2>Register</h2>
@@ -9,16 +9,18 @@
   </md-toolbar>
   <md-card-content>
     <form>
-      <md-content layout-padding layout="column" class="autoScroll">
-        <md-input-container layout="row">
+      <md-content>
+        <md-input-container class="md-block">
           <md-icon md-svg-src="img/icons/ic_person_black_24px.svg"></md-icon>
-          <label>Username</label>
-          <input type="text">
+          <input type="text" placeholder="Username">
         </md-input-container>
-        <md-input-container layout="row">
+        <md-input-container class="md-block">
+          <md-icon md-svg-src="img/icons/ic_email_black_24px.svg"></md-icon>
+          <input type="email" placeholder="Email">
+        </md-input-container>
+        <md-input-container class="md-block">
           <md-icon md-svg-src="img/icons/ic_lock_black_24px.svg"></md-icon>
-          <label>Password</label>
-          <input type="password">
+          <input type="password" placeholder="Password">
         </md-input-container>
       </md-content>
       <div class="md-actions" layout="row" layout-align="end">

@@ -45,6 +45,18 @@ md-whiteframe {
   width: 360px;
 }
 
+.registerbox {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  margin: 12px;
+  border-radius: 5px;
+  height: 390px;
+  width: 360px;
+}
+
 .logintoolbar {
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;

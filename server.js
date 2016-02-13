@@ -25,42 +25,49 @@ app.use(bodyParser.urlencoded({"extended" : false}));
 //login with existing user
 router.post('/authenticate', function(req, res) {
   User.findOne({
-    name: req.body.name
+    username: req.body.username
   }, function(err, user) {
-		if (err) throw err;
-		if (!user) { //If user does not exists
-			res.json({ "success": false, "message": 'Authentication failed. User not found.' });
-		} else if (user) { //If user exists
-			if (user.password != req.body.password) { //Check if password matches
-				res.json({ "success": false, "message": 'Authentication failed. Wrong password.' });
-			} else {
-				//if user is found and password is right, create a token
-				var token = jwt.sign(user, app.get('secret'), {
-					expiresInMinutes: 1440 //expires in 24 hours
-				});
-				res.json({ "success": true, "message": 'Successfully authenticated', "token": token });
-			}
-		}
-	});
+    if (err) throw err;
+    if (!user) { //If user does not exists
+      res.json({ "success": false, "message": 'Authentication failed. User not found.' });
+    } else if (user) { //If user exists
+      //Check if password matches
+      user.comparePassword(req.body.password, function(err, isMatch) {
+        if (err) throw err;
+        if(!isMatch) { //if password does not match
+          res.json({ "success": false, "message": 'Authentication failed. Wrong password.' });
+        } else {
+          //if password is right, create a token
+          var token = jwt.sign(user, app.get('secret'), {
+            expiresInMinutes: 1440 //expires in 24 hours
+          });
+          res.json({ "success": true, "message": 'Successfully authenticated', "token": token });
+        }
+      });
+    }
+  });
 });
 
 //register a new user
 router.post('/register', function(req, res) {
   User.findOne({
-    name: req.body.name
+    username: req.body.username
   }, function(err, user) {
-		if (err) throw err;
-		if (!user) { //If user does not exists
-    	var newUser = new User({ name: req.body.name, password: req.body.password });
-    	newUser.save(function(err) {
-    		if (err) throw err;
-    		console.log('User saved successfully');
-    		res.json({ "success": true, "message": 'User registered successfully' });
-    	});
-		} else if (user) { //If user exists
-			res.json({ "success": false, "message": 'Registration failed. User already exists.' });
-		}
-	});
+    if (err) throw err;
+    if (!user) { //If user does not exists
+      var newUser = new User({ username: req.body.username,
+        email: req.body.email,
+        password: req.body.password });
+      console.log(newUser);
+      newUser.save(function(err) {
+        if (err) throw err;
+        console.log('User saved successfully');
+        res.json({ "success": true, "message": 'User registered successfully' });
+      });
+    } else if (user) { //If user exists
+      res.json({ "success": false, "message": 'Registration failed. User already exists.' });
+    }
+  });
 });
 
 /*===========================
