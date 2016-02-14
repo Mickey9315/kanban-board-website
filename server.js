@@ -72,10 +72,11 @@ router.post('/register', function(req, res) {
 
 /*================================================
  route middleware to authenticate and check token
+       All the requests below need token
 =================================================*/
 router.use(function(req, res, next) {
-  //check header or url parameters or post parameters for token
-  var token = req.body.token || req.param('token') || req.headers['x-access-token'];
+  //check header or post parameter for token
+  var token = req.body.token || req.headers['x-access-token'];
   if (token) { //decode token
     //verifies secret and checks exp
     jwt.verify(token, app.get('secret'), function(err, decoded) {
@@ -94,6 +95,13 @@ router.use(function(req, res, next) {
       message: 'No token provided.'
     });
   }
+});
+
+//Get all registered users
+router.get('/users', function(req, res) {
+  User.find({}, function(err, users) {
+    res.json(users);
+  });
 });
 
 /*===========================
