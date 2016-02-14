@@ -97,7 +97,7 @@
   </div>
   <!-- Custom dialog -->
   <script type='text/ng-template' id='dialog1.tmpl.html'>
-    <md-dialog aria-label="Nueva tarjeta"  ng-cloak>
+    <md-dialog aria-label="Nueva tarjeta" ng-cloak>
       <form>
       <md-toolbar>
         <div class="md-toolbar-tools">
@@ -111,9 +111,8 @@
       <md-dialog-content style="max-width:800px;max-height:810px;min-width:300px;min-height:100px">
         <div class="md-dialog-content">
           <md-content layout-padding class="autoScroll">
-            <md-input-container>
-              <label>Description</label>
-              <input type="text" ng-model="inputDialog.description">
+            <md-input-container class="md-block">
+              <input type="text" ng-model="inputDialog.description" placeholder="Description">
             </md-input-container>
           </md-content>
         </div>

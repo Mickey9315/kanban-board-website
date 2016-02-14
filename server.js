@@ -39,7 +39,7 @@ router.post('/authenticate', function(req, res) {
         } else {
           //if password is right, create a token
           var token = jwt.sign(user, app.get('secret'), {
-            expiresInMinutes: 1440 //expires in 24 hours
+            expiresIn: 86400 //expires in 24 hours
           });
           res.json({ "success": true, "message": 'Successfully authenticated', "token": token });
         }
@@ -68,6 +68,32 @@ router.post('/register', function(req, res) {
       res.json({ "success": false, "message": 'Registration failed. User already exists.' });
     }
   });
+});
+
+/*================================================
+ route middleware to authenticate and check token
+=================================================*/
+router.use(function(req, res, next) {
+  //check header or url parameters or post parameters for token
+  var token = req.body.token || req.param('token') || req.headers['x-access-token'];
+  if (token) { //decode token
+    //verifies secret and checks exp
+    jwt.verify(token, app.get('secret'), function(err, decoded) {
+      if (err) {
+        return res.json({ success: false, message: 'Failed to authenticate token.' });
+      } else {
+        //if everything is good, save to request for use in other routes
+        req.decoded = decoded;
+        next();
+      }
+    });
+  } else {
+    //if there is no token, return an error
+    return res.status(403).send({
+      success: false,
+      message: 'No token provided.'
+    });
+  }
 });
 
 /*===========================
