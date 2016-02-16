@@ -24,8 +24,8 @@
     };
 
     //Get the cards and show them using the factory
-    $scope.getCards = function() {
-      kanbanFactory.getCards()
+    $scope.getCards = function(token) {
+      kanbanFactory.getCards(token)
         .success(function(response) {
           angular.forEach(response.message, function(card){
             //Action after getting the cards
@@ -35,8 +35,8 @@
     };
 
     //Create new card
-    $scope.addCard = function(card) {
-      kanbanFactory.createCard(card)
+    $scope.addCard = function(cardContent, cardCategory, token) {
+      kanbanFactory.createCard(cardContent, cardCategory, token)
         .success(function(response) {
           //Action after creating the card
           $scope.checkCategory(response.message);
@@ -44,8 +44,8 @@
     };
 
     //Edit card
-    $scope.editCard = function(card) {
-      kanbanFactory.editCard(card)
+    $scope.editCard = function(cardContent, cardCategory, token) {
+      kanbanFactory.editCard(cardContent, cardCategory, token)
         .success(function(response) {
           //Action after editing card
         });
@@ -96,14 +96,14 @@
       })
       .then(function(answer) {
         //Dialog accepted
-        var card = { cardContent: answer.description, cardCategory: 'ready' };
-        console.log(card);
-        if(card.cardContent != '') {
-          $scope.addCard(card); //Creates new card
+        var cardContent = answer.description;
+        var cardCategory = 'ready';
+        var token = ''; //Use the user json web token here
+        if(cardContent != '') {
+          $scope.addCard(cardContent, cardCategory, token); //Creates new card
         }
       }, function() {
         //Dialog cancelled
-        console.log('dialog cancelado');
       });
     };
 

@@ -4,23 +4,19 @@
 
   app.config(function($routeProvider) {
     $routeProvider
-      .when('/', {
-        controller: 'loginController',
-        templateUrl: 'views/login.html'
-      })
       .when('/login', {
         controller: 'loginController',
         templateUrl: 'views/login.html'
       })
       .when('/register', {
-        controller: 'loginController',
+        controller: 'registerController',
         templateUrl: 'views/register.html'
       })
       .when('/kanban', {
         controller: 'kanbanController',
         templateUrl: 'views/kanban.html'
       })
-      .otherwise( { redirectTo: '/' } );
+      .otherwise( { redirectTo: '/login' } );
     });
 
 }());

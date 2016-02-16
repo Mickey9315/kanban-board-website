@@ -1,20 +1,21 @@
 (function() {
 
-//WORK IN PROGRESS
-
   var loginFactory = function($http) {
     var factory = {};
 
-    factory.getUsers = function() {
-      return $http.get('/users');
+    factory.getUsers = function(token) {
+      var jsonObject = { token: token };
+      return $http.get('/users', jsonObject);
     };
 
-    factory.signin = function(username, password) {
-      return $http.post('/signin', username, password);
+    factory.authenticate = function(username, password) {
+      var jsonObject = { username: username, password: password };
+      return $http.post('/authenticate', jsonObject);
     };
 
-    factory.signup = function(username, password) {
-      return $http.post('/signup', username, password);
+    factory.register = function(username, email, password) {
+      var jsonObject = { username: username, password: password, email: email };
+      return $http.post('/register', jsonObject);
     }
 
     return factory;

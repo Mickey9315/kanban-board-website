@@ -5,15 +5,15 @@ var bodyParser = require("body-parser");
 var router = express.Router();
 var morgan = require('morgan');
 var mongoose = require('mongoose');
-var jwt = require('jsonwebtoken'); // used to create, sign, and verify tokens
-var config = require('./config'); // get our config file
+var jwt = require('jsonwebtoken');
+var config = require('./config');
 var Card = require("./models/card");
-var User = require('./models/user'); // get our mongoose model
+var User = require('./models/user');
 
 //Configuration
-var port = process.env.PORT || 8080; // used to create, sign, and verify tokens
-mongoose.connect(config.database); // connect to database
-app.set('secret', config.secret); // secret variable
+var port = process.env.PORT || 8080;
+mongoose.connect(config.database); //connect to database
+app.set('secret', config.secret); //secret variable
 app.use(morgan("dev")); //log the requests to the console
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({"extended" : false}));
@@ -58,12 +58,21 @@ router.post('/register', function(req, res) {
       var newUser = new User({ username: req.body.username,
         email: req.body.email,
         password: req.body.password });
-      console.log(newUser);
-      newUser.save(function(err) {
-        if (err) throw err;
-        console.log('User saved successfully');
-        res.json({ "success": true, "message": 'User registered successfully' });
-      });
+      if(newUser.username !== undefined ||
+        newUser.email !== undefined ||
+        newUser.password !== undefined){
+          newUser.save(function(err) { //Save the new user
+            if (err) throw err;
+            //If user is registered successfully, create a token
+            var token = jwt.sign(user, app.get('secret'), {
+              expiresIn: 86400 //expires in 24 hours
+            });
+            res.json({ "success": true, "message": 'User registered successfully', "token": token });
+          });
+        }
+        else {
+          res.json({ "success": false, "message": 'User not valid' });
+        }
     } else if (user) { //If user exists
       res.json({ "success": false, "message": 'Registration failed. User already exists.' });
     }
@@ -136,7 +145,7 @@ router.route("/cards")
 
 //GET, PUT and DELETE by ID
 router.route('/cards/:id')
-  .get(function(req,res){ //Get specific card by ID
+  .get(function(req,res) { //Get specific card by ID
     Card.findById(req.params.id, function(err, card){
       if(err) {
         response = {"success": false, "message": "Card not found"};
@@ -147,7 +156,7 @@ router.route('/cards/:id')
       }
     });
   })
-  .put(function(req,res){ //Update card by ID
+  .put(function(req,res) { //Update card by ID
     Card.findById(req.params.id, function(err, card){
       if(err) {
         response = {"success": false, "message": "Card not found"};
@@ -171,7 +180,7 @@ router.route('/cards/:id')
       }
     });
   })
-  .delete(function(req,res){ //Remove card by ID
+  .delete(function(req,res) { //Remove card by ID
     Card.findById(req.params.id, function(err, card){
       if(err) {
         response = {"success": false, "message": "Card not found"};
