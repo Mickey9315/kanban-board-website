@@ -58,8 +58,8 @@ router.post('/register', function(req, res) {
       var newUser = new User({ username: req.body.username,
         email: req.body.email,
         password: req.body.password });
-      if(newUser.username !== undefined ||
-        newUser.email !== undefined ||
+      if(newUser.username !== undefined &&
+        newUser.email !== undefined &&
         newUser.password !== undefined){
           newUser.save(function(err) { //Save the new user
             if (err) throw err;
