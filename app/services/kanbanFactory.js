@@ -3,8 +3,8 @@
   var kanbanFactory = function($http) {
     var factory = {};
 
-    factory.getCards = function(token) {
-      return $http.get('/cards', { headers: {'x-access-token': token } });
+    factory.getCards = function(token, userID) {
+      return $http.get('/cards', { headers: {'x-access-token': token, 'x-user-id':userID } });
     };
 
     factory.createCard = function(card, token) {

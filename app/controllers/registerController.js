@@ -13,6 +13,8 @@
           if(response.success) { //User registered
             //Save the returned JSON web token into the sessionStorage
             $window.sessionStorage.token = response.token;
+            //Save the returned user ID into the sessionStorage
+            $window.sessionStorage.userID = response.userID;
             //Go to kanban application
             $location.path('/kanban');
           } else { //register error

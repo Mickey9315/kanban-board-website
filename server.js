@@ -7,8 +7,8 @@ var morgan = require('morgan');
 var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken');
 var config = require('./config');
-var Card = require("./models/card");
 var User = require('./models/user');
+var Card = require("./models/card");
 
 //Configuration
 var port = process.env.PORT || 8080;
@@ -41,7 +41,8 @@ router.post('/authenticate', function(req, res) {
           var token = jwt.sign(user, app.get('secret'), {
             expiresIn: 86400 //expires in 24 hours
           });
-          res.json({ "success": true, "message": 'Successfully authenticated', "token": token });
+          res.json({ "success": true, "message": 'Successfully authenticated',
+          "token": token, "userID": user.id });
         }
       });
     }
@@ -57,17 +58,18 @@ router.post('/register', function(req, res) {
     if (!user) { //If user does not exists
       var newUser = new User({ username: req.body.username,
         email: req.body.email,
-        password: req.body.password });
-      if(newUser.username !== undefined &&
-        newUser.email !== undefined &&
-        newUser.password !== undefined){
+        password: req.body.password
+      });
+      if(newUser.username !== undefined && newUser.email !== undefined
+        && newUser.password !== undefined) {
           newUser.save(function(err) { //Save the new user
             if (err) throw err;
             //If user is registered successfully, create a token
             var token = jwt.sign(user, app.get('secret'), {
               expiresIn: 86400 //expires in 24 hours
             });
-            res.json({ "success": true, "message": 'User registered successfully', "token": token });
+            res.json({ "success": true, "message": 'User registered successfully',
+            "token": token, "userID": newUser.id });
           });
         }
         else {
@@ -124,19 +126,20 @@ router.get('/users', function(req, res) {
 
 //GET and POST
 router.route("/cards")
-  .get(function(req, res) { //Get all cards
-    Card.find(function(err, cards) {
+  .get(function(req, res) { //Get all cards for the user
+    var userID = req.headers['x-user-id'];
+    Card.find({user: userID}, function(err, cards) {
       if(err) {
-        response = {"success": false, "message": "Error finding cards"};
-        res.json(response);
+        res.json({"success": false, "message": "Error finding cards"});
       } else {
-        response = {"success": true, "message": cards};
-        res.json(response);
+        res.json({"success": true, "message": cards});
       }
     });
   })
   .post(function(req, res) { //Create new card
-    Card.create({cardContent: req.body.cardContent, cardCategory: req.body.cardCategory},
+    Card.create({ cardContent: req.body.cardContent,
+      cardCategory: req.body.cardCategory,
+      user: req.body.user },
       function(err, createdCard) {
         if(err) {
           response = {"success": false, "message": "Error creating card"};

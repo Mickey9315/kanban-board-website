@@ -26,7 +26,8 @@
 
     //Get the cards and show them using the factory
     $scope.getCards = function() {
-      kanbanFactory.getCards($window.sessionStorage.getItem('token'))
+      kanbanFactory.getCards($window.sessionStorage.getItem('token'),
+      $window.sessionStorage.getItem('userID'))
         .success(function(response) {
           angular.forEach(response.message, function(card){
             //Action after getting the cards
@@ -84,8 +85,9 @@
     $scope.logout = function() {
       kanbanFactory.logout()
         .success(function(response) {
-          //remove the user token from the sessionStorage
+          //remove the user token and user ID from the sessionStorage
           $window.sessionStorage.removeItem('token');
+          $window.sessionStorage.removeItem('userID');
           //go to login page
           $location.path('/login');
         });
@@ -102,7 +104,8 @@
       })
       .then(function(answer) {
         //Dialog accepted
-        var card = { cardContent: answer.description, cardCategory: 'ready' };
+        var card = { cardContent: answer.description, cardCategory: 'ready',
+        user: $window.sessionStorage.getItem('userID') };
         if(card.cardContent != '') {
           $scope.addCard(card); //Creates new card
         }
