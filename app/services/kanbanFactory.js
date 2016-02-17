@@ -4,18 +4,19 @@
     var factory = {};
 
     factory.getCards = function(token) {
-      var jsonObject = { token: token };
-      return $http.get('/cards', jsonObject);
+      return $http.get('/cards', { headers: {'x-access-token': token } });
     };
 
-    factory.createCard = function(cardContent, cardCategory, token) {
-      var jsonObject = { cardContent: cardContent, cardCategory: cardCategory, token: token };
-      return $http.post('/cards', jsonObject);
+    factory.createCard = function(card, token) {
+      return $http.post('/cards', card, { headers: {'x-access-token': token } });
     };
 
-    factory.editCard = function(cardContent, cardCategory, token) {
-      var jsonObject = { cardContent: cardContent, cardCategory: cardCategory, token: token };
-      return $http.put('/cards/' + card._id, jsonObject);
+    factory.editCard = function(card, token) {
+      return $http.put('/cards/' + card._id, card, { headers: {'x-access-token': token } });
+    }
+
+    factory.logout = function() {
+      return $http.post('/logout');
     }
 
     return factory;

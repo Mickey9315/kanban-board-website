@@ -1,6 +1,7 @@
 (function() {
 
-  var kanbanController = function($scope, $mdSidenav, $log, $mdDialog, $mdToast, $location, kanbanFactory, dragulaService) {
+  var kanbanController = function($scope, $mdSidenav, $log, $mdDialog, $mdToast,
+    $location, $window, kanbanFactory, dragulaService) {
 
     //Card arrays
     $scope.readyCards = [];
@@ -24,8 +25,8 @@
     };
 
     //Get the cards and show them using the factory
-    $scope.getCards = function(token) {
-      kanbanFactory.getCards(token)
+    $scope.getCards = function() {
+      kanbanFactory.getCards($window.sessionStorage.getItem('token'))
         .success(function(response) {
           angular.forEach(response.message, function(card){
             //Action after getting the cards
@@ -35,8 +36,8 @@
     };
 
     //Create new card
-    $scope.addCard = function(cardContent, cardCategory, token) {
-      kanbanFactory.createCard(cardContent, cardCategory, token)
+    $scope.addCard = function(card) {
+      kanbanFactory.createCard(card, $window.sessionStorage.getItem('token'))
         .success(function(response) {
           //Action after creating the card
           $scope.checkCategory(response.message);
@@ -44,8 +45,8 @@
     };
 
     //Edit card
-    $scope.editCard = function(cardContent, cardCategory, token) {
-      kanbanFactory.editCard(cardContent, cardCategory, token)
+    $scope.editCard = function(card) {
+      kanbanFactory.editCard(card, $window.sessionStorage.getItem('token'))
         .success(function(response) {
           //Action after editing card
         });
@@ -76,13 +77,18 @@
     $scope.toggleLeft = function() {
       $mdSidenav('left').toggle().then(function(){
         //Action when toggle
-        $log.debug("toggle left is done");
       });
     };
 
     //Logout and go back to login screen
     $scope.logout = function() {
-      $location.path('/login');
+      kanbanFactory.logout()
+        .success(function(response) {
+          //remove the user token from the sessionStorage
+          $window.sessionStorage.removeItem('token');
+          //go to login page
+          $location.path('/login');
+        });
     }
 
     //Show the dialog to create a new card
@@ -96,11 +102,9 @@
       })
       .then(function(answer) {
         //Dialog accepted
-        var cardContent = answer.description;
-        var cardCategory = 'ready';
-        var token = ''; //Use the user json web token here
-        if(cardContent != '') {
-          $scope.addCard(cardContent, cardCategory, token); //Creates new card
+        var card = { cardContent: answer.description, cardCategory: 'ready' };
+        if(card.cardContent != '') {
+          $scope.addCard(card); //Creates new card
         }
       }, function() {
         //Dialog cancelled
@@ -124,7 +128,8 @@
     $scope.getCards(); //Get all cards when you enter or refresh the application
   };
 
-  kanbanController.$inject = ['$scope', '$mdSidenav', '$log', '$mdDialog', '$mdToast', '$location', 'kanbanFactory', 'dragulaService'];
+  kanbanController.$inject = ['$scope', '$mdSidenav', '$log', '$mdDialog', '$mdToast',
+  '$location', '$window', 'kanbanFactory', 'dragulaService'];
 
   angular.module('kanban-board')
     .controller('kanbanController', kanbanController);

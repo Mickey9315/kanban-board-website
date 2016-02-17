@@ -79,6 +79,11 @@ router.post('/register', function(req, res) {
   });
 });
 
+//close the current session of the user (delete token on the client side)
+router.post('/logout', function(req, res) {
+  res.json({ "success": true, "message": 'User logout successfully' });
+});
+
 /*================================================
  route middleware to authenticate and check token
        All the requests below need token

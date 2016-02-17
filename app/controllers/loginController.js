@@ -1,17 +1,17 @@
 (function() {
 
-  var loginController = function($scope, $location, $mdToast, loginFactory) {
+  var loginController = function($scope, $location, $mdToast, $window, userFactory) {
 
     $scope.username = this.username;
     $scope.password = this.password;
 
     //Login function
     $scope.authenticate = function() {
-      loginFactory.authenticate($scope.username, $scope.password)
+      userFactory.authenticate($scope.username, $scope.password)
         .success(function(response) {
           if(response.success) { //authentication successful
-            //Save the JSON web token returned
-            $mdToast.show($mdToast.simple().textContent("token: " + response.token));
+            //Save the returned JSON web token into the sessionStorage
+            $window.sessionStorage.token = response.token;
             //Go to kanban application
             $location.path('/kanban');
           } else { //authentication error
@@ -27,7 +27,7 @@
 
   };
 
-  loginController.$inject = ['$scope', '$location', '$mdToast', 'loginFactory'];
+  loginController.$inject = ['$scope', '$location', '$mdToast', '$window', 'userFactory'];
 
   angular.module('kanban-board')
     .controller('loginController', loginController);

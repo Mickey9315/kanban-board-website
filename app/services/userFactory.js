@@ -1,11 +1,10 @@
 (function() {
 
-  var loginFactory = function($http) {
+  var userFactory = function($http) {
     var factory = {};
 
     factory.getUsers = function(token) {
-      var jsonObject = { token: token };
-      return $http.get('/users', jsonObject);
+      return $http.get('/users', { headers: {'x-access-token': token } });
     };
 
     factory.authenticate = function(username, password) {
@@ -21,8 +20,8 @@
     return factory;
   };
 
-  loginFactory.$inject = ['$http'];
+  userFactory.$inject = ['$http'];
 
-  angular.module('kanban-board').factory('loginFactory', loginFactory);
+  angular.module('kanban-board').factory('userFactory', userFactory);
 
 }());
