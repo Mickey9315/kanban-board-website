@@ -1,6 +1,6 @@
 (function() {
 
-  var registerController = function($scope, $location, $mdToast, userFactory) {
+  var registerController = function($scope, $location, $mdToast, $window, userFactory) {
 
     $scope.username = this.username;
     $scope.password = this.password;
@@ -11,8 +11,8 @@
       userFactory.register($scope.username, $scope.email, $scope.password)
         .success(function(response) {
           if(response.success) { //User registered
-            //Save the JSON web token returned
-            $mdToast.show($mdToast.simple().textContent("token: " + response.token));
+            //Save the returned JSON web token into the sessionStorage
+            $window.sessionStorage.token = response.token;
             //Go to kanban application
             $location.path('/kanban');
           } else { //register error
@@ -28,7 +28,7 @@
 
   };
 
-  registerController.$inject = ['$scope', '$location', '$mdToast', 'userFactory'];
+  registerController.$inject = ['$scope', '$location', '$mdToast', '$window', 'userFactory'];
 
   angular.module('kanban-board')
     .controller('registerController', registerController);
