@@ -14,7 +14,7 @@
             //Save the returned JSON web token into the sessionStorage
             $window.sessionStorage.token = response.token;
             //Save the returned user ID into the sessionStorage
-            $window.sessionStorage.userID = response.userID;
+            $window.sessionStorage.userID = response.user._id;
             //Go to kanban application
             $location.path('/kanban');
           } else { //register error

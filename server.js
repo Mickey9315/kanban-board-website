@@ -12,6 +12,7 @@ var Card = require("./models/card");
 
 //Configuration
 var port = process.env.PORT || 8080;
+var IPAddress = '192.168.0.165';
 mongoose.connect(config.database); //connect to database
 app.set('secret', config.secret); //secret variable
 app.use(morgan("dev")); //log the requests to the console
@@ -42,7 +43,7 @@ router.post('/authenticate', function(req, res) {
             expiresIn: 86400 //expires in 24 hours
           });
           res.json({ "success": true, "message": 'Successfully authenticated',
-          "token": token, "userID": user.id });
+          "token": token, "user": user });
         }
       });
     }
@@ -69,7 +70,7 @@ router.post('/register', function(req, res) {
               expiresIn: 86400 //expires in 24 hours
             });
             res.json({ "success": true, "message": 'User registered successfully',
-            "token": token, "userID": newUser.id });
+            "token": token, "user": newUser });
           });
         }
         else {
@@ -209,5 +210,5 @@ router.route('/cards/:id')
 
 //Start the server
 app.use(express.static(__dirname + '/'), router);
-app.listen(port);
-console.log('Magic happens at http://localhost:' + port);
+app.listen(port, IPAddress);
+console.log('Magic happens at http://' + IPAddress + ':' + port);
