@@ -94,11 +94,6 @@ md-toolbar-tools {
   height: 100%;
 }
 
-.ready, .inprogress, .paused, .testing, .done {
-  width: 20%;
-  min-width: 180px;
-}
-
 .ready, .paused, .done {
   background-color: rgba(96, 125, 139, 0.2);
 }
