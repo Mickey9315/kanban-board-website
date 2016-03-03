@@ -32,7 +32,7 @@
         </md-menu>
     </div>
   </md-toolbar>
-  <div id="kanbanlayout" layout="row" layout-xs="column">
+  <md-content id="kanbanlayout" layout="row" layout-xs="column">
     <!-- Left sidenav -->
     <md-sidenav layout="column" class="md-sidenav-left md-whiteframe-z2" md-component-id="left">
       <md-toolbar class="md-theme-light">
@@ -40,7 +40,7 @@
       </md-toolbar>
     </md-sidenav>
     <!-- Ready cards -->
-    <div flex-gt-sm="25" class='ready'>
+    <div flex-gt-xs="25" class='ready'>
       <md-whiteframe class="md-whiteframe-1dp" layout layout-align="center center" id='ready-title'>
         <h3>To do</h3>
       </md-whiteframe>
@@ -51,7 +51,7 @@
       </md-list>
     </div>
     <!-- In progress cards -->
-    <div flex-gt-sm="25" class='inprogress'>
+    <div flex-gt-xs="25" class='inprogress'>
       <md-whiteframe class="md-whiteframe-1dp" layout layout-align="center center" id='inprogress-title'>
         <h3>In progress</h3>
       </md-whiteframe>
@@ -62,7 +62,7 @@
       </md-list>
     </div>
     <!-- Paused cards -->
-    <div flex-gt-sm="25" class='paused'>
+    <div flex-gt-xs="25" class='paused'>
       <md-whiteframe class="md-whiteframe-1dp" layout layout-align="center center" id='paused-title'>
         <h3>Paused</h3>
       </md-whiteframe>
@@ -73,7 +73,7 @@
       </md-list>
     </div>
     <!-- Testing cards -->
-    <div flex-gt-sm="25" class='testing'>
+    <div flex-gt-xs="25" class='testing'>
       <md-whiteframe class="md-whiteframe-1dp" layout layout-align="center center" id='testing-title'>
         <h3>Testing</h3>
       </md-whiteframe>
@@ -84,7 +84,7 @@
       </md-list>
     </div>
     <!-- Done cards -->
-    <div flex-gt-sm="25" class='done'>
+    <div flex-gt-xs="25" class='done'>
       <md-whiteframe class="md-whiteframe-1dp" layout layout-align="center center" id='done-title'>
         <h3>Done</h3>
       </md-whiteframe>
@@ -125,4 +125,4 @@
       </form>
     </md-dialog>
   </script>
-</div>
+</md-content>
