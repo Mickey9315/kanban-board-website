@@ -1,14 +1,15 @@
 //Packages, models and configurations
 var express = require('express');
 var app = express();
-var bodyParser = require("body-parser");
+var bodyParser = require('body-parser');
 var router = express.Router();
 var morgan = require('morgan');
 var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken');
 var config = require('./config');
 var User = require('./models/user');
-var Card = require("./models/card");
+var Board = require('./models/board');
+var Card = require('./models/card');
 
 //Configuration
 var port = process.env.PORT || 8080;
@@ -116,20 +117,117 @@ router.use(function(req, res, next) {
 
 //Get all registered users
 router.get('/users', function(req, res) {
-  User.find({}, function(err, users) {
-    res.json(users);
+  User.find({}).populate('boards').exec(function(err, users) {
+    if(err) {
+      res.json({"success": false, "message": "Cant get users"});
+    } else {
+      res.json({"success": true, "message": users});
+    }
   });
 });
 
 /*===========================
-          Cards API
+          Boards API
 ============================*/
 
 //GET and POST
-router.route("/cards")
-  .get(function(req, res) { //Get all cards for the user
+router.route("/boards")
+  //Get all kanban boards for the user
+  .get(function(req, res) {
     var userID = req.headers['x-user-id'];
-    Card.find({user: userID}, function(err, cards) {
+    Board.find({owners: userID}, function(err, boards) {
+      if(err) {
+        res.json({"success": false, "message": "Error finding boards"});
+      } else {
+        res.json({"success": true, "message": boards});
+      }
+    });
+  })
+  //Create new board
+  .post(function(req, res) {
+    Board.create({
+      name: req.body.name,
+      description: req.body.description,
+      owners: [ req.body.owner ]
+     },
+     function(err, createdBoard) {
+       if(err) {
+         res.json({"success": false, "message": "Error creating board"});
+       } else {
+         res.json({"success": true, "message": createdBoard});
+       }
+     });
+   });
+
+//GET, PUT and DELETE by ID
+router.route('/boards/:id')
+  //Get specific board by ID
+  .get(function(req,res) {
+    Board.findById(req.params.id, function(err, board) {
+      if(err) {
+        res.json({"success": false, "message": "Board not found"});
+      } else {
+        res.json({"success": true, "message": board});
+      }
+    });
+  })
+  //Update board by ID
+  .put(function(req,res) {
+    Board.findById(req.params.id, function(err, board) {
+      if(err) {
+        res.json({"success": false, "message": "Board not found"});
+      } else {
+        if(req.body.name !== undefined) {
+          board.name = req.body.name; //Edit name
+        }
+        if(req.body.description !== undefined) {
+          board.description = req.body.description; //Edit description
+        }
+        board.save(function(err, savedBoard) {
+          if(err) {
+            res.json({"success": false, "message": "Error saving board"});
+          } else {
+            res.json({"success": true, "message": savedBoard});
+          }
+        });
+      }
+    });
+  })
+  //Remove board by ID
+  .delete(function(req,res) {
+    //Find the board
+    Board.findById(req.params.id, function(err, board) {
+      if(err) {
+        res.json({"success": false, "message": "Board not found"});
+      } else {
+        //Remove the board
+        Board.remove({_id : req.params.id}, function(err) {
+          if(err) {
+            res.json({"success": false, "message": "Error removing board"});
+          } else {
+            //Remove all cards associated to the board ID
+            Card.remove({board: req.params.id}, function(err) {
+              if(err) {
+                res.json({"success": false, "message": "Error removing board cards"});
+              } else {
+                res.json({"success": true, "message": "Board with id = " + req.params.id + " deleted"});
+              }
+            });
+          }
+        });
+      }
+    });
+  });
+
+/*===========================
+          Cards API
+============================*/
+//GET and POST
+router.route("/cards")
+  //Get all cards for the board
+  .get(function(req, res) {
+    var boardID = req.headers['x-board-id'];
+    Card.find({board: boardID}, function(err, cards) {
       if(err) {
         res.json({"success": false, "message": "Error finding cards"});
       } else {
@@ -137,76 +235,25 @@ router.route("/cards")
       }
     });
   })
-  .post(function(req, res) { //Create new card
-    Card.create({ cardContent: req.body.cardContent,
-      cardCategory: req.body.cardCategory,
-      user: req.body.user },
-      function(err, createdCard) {
-        if(err) {
-          response = {"success": false, "message": "Error creating card"};
-          res.json(response);
-        } else {
-          response = {"success": true, "message": createdCard};
-          res.json(response);
-        }
-      });
-  });
+  //Create new card
+  .post(function(req, res) {
+    var boardID = req.headers['x-board-id'];
+    Card.create({
+      content: req.body.content,
+      category: req.body.category,
+      board: boardID
+     },
+     function(err, createdCard) {
+       if(err) {
+         res.json({"success": false, "message": "Error creating card"});
+       } else {
+         res.json({"success": true, "message": createdCard});
+       }
+     });
+   });
 
-//GET, PUT and DELETE by ID
-router.route('/cards/:id')
-  .get(function(req,res) { //Get specific card by ID
-    Card.findById(req.params.id, function(err, card){
-      if(err) {
-        response = {"success": false, "message": "Card not found"};
-        res.json(response);
-      } else {
-        response = {"success": true, "message": card};
-        res.json(response);
-      }
-    });
-  })
-  .put(function(req,res) { //Update card by ID
-    Card.findById(req.params.id, function(err, card){
-      if(err) {
-        response = {"success": false, "message": "Card not found"};
-        res.json(response);
-      } else {
-        if(req.body.cardContent !== undefined) {
-          card.cardContent = req.body.cardContent;
-        }
-        if(req.body.cardCategory !== undefined) {
-          card.cardCategory = req.body.cardCategory;
-        }
-        card.save(function(err, savedCard){
-          if(err) {
-            response = {"success": false, "message": "Error saving card"};
-            res.json(response);
-          } else {
-            response = {"success": true, "message": savedCard};
-            res.json(response);
-          }
-        });
-      }
-    });
-  })
-  .delete(function(req,res) { //Remove card by ID
-    Card.findById(req.params.id, function(err, card){
-      if(err) {
-        response = {"success": false, "message": "Card not found"};
-        res.json(response);
-      } else {
-        Card.remove({_id : req.params.id},function(err){
-          if(err) {
-            response = {"success": false, "message": "Error removing card"};
-            res.json(response);
-          } else {
-            response = {"success": true, "message": "Card with id = "+req.params.id+" deleted"};
-            res.json(response);
-          }
-        });
-      }
-    });
-  });
+   //WORK IN PROGRESS...
+
 
 //Start the server
 app.use(express.static(__dirname + '/'), router);
