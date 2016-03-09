@@ -25,6 +25,9 @@ app.use(bodyParser.urlencoded({"extended" : false}));
 ============================*/
 
 //login with existing user
+// body: username, password
+// params: ...
+// headers: ...
 router.post('/authenticate', function(req, res) {
   User.findOne({
     username: req.body.username
@@ -52,6 +55,9 @@ router.post('/authenticate', function(req, res) {
 });
 
 //register a new user
+// body: username, email, password
+// params: ...
+// headers: ...
 router.post('/register', function(req, res) {
   User.findOne({
     username: req.body.username
@@ -84,6 +90,9 @@ router.post('/register', function(req, res) {
 });
 
 //close the current session of the user (delete token on the client side)
+// body: ...
+// params: ...
+// headers: ...
 router.post('/logout', function(req, res) {
   res.json({ "success": true, "message": 'User logout successfully' });
 });
@@ -116,12 +125,29 @@ router.use(function(req, res, next) {
 });
 
 //Get all registered users
+// body: ...
+// params: ...
+// headers: x-access-token
 router.get('/users', function(req, res) {
-  User.find({}).populate('boards').exec(function(err, users) {
+  User.find({}, function(err, users) {
     if(err) {
       res.json({"success": false, "message": "Cant get users"});
     } else {
       res.json({"success": true, "message": users});
+    }
+  });
+});
+
+//Get user information by ID
+// body: ...
+// params: id
+// headers: x-access-token
+router.get('/users/:id', function(req, res) {
+  User.findById(req.params.id, function(err, user) {
+    if(err) {
+      res.json({"success": false, "message": "Cant get the user"});
+    } else {
+      res.json({"success": true, "message": user});
     }
   });
 });
@@ -132,10 +158,12 @@ router.get('/users', function(req, res) {
 
 //GET and POST
 router.route("/boards")
-  //Get all kanban boards for the user
+  //Get all kanban boards for all users
+  // body: ...
+  // params: ...
+  // headers: x-access-token
   .get(function(req, res) {
-    var userID = req.headers['x-user-id'];
-    Board.find({owners: userID}, function(err, boards) {
+    Board.find({}, function(err, boards) {
       if(err) {
         res.json({"success": false, "message": "Error finding boards"});
       } else {
@@ -144,24 +172,40 @@ router.route("/boards")
     });
   })
   //Create new board
+  // body: name, description, owner
+  // params: ...
+  // headers: x-access-token
   .post(function(req, res) {
-    Board.create({
-      name: req.body.name,
-      description: req.body.description,
-      owners: [ req.body.owner ]
-     },
-     function(err, createdBoard) {
-       if(err) {
-         res.json({"success": false, "message": "Error creating board"});
-       } else {
-         res.json({"success": true, "message": createdBoard});
-       }
-     });
+    Board.findOne({name: req.body.name}, function(err, board) {
+      if(err) {
+        res.json({"success": false, "message": "Error searching board"});
+      } else {
+        if(board !== null) { //if board exists
+          res.json({"success": false, "message": "Board already exists with this name"});
+        } else { //if board does not exists
+          Board.create({ //creates board
+            name: req.body.name,
+            description: req.body.description,
+            owners: [ req.body.owner ]
+           },
+           function(err, createdBoard) {
+             if(err) {
+               res.json({"success": false, "message": "Error creating board"});
+             } else {
+               res.json({"success": true, "message": createdBoard});
+             }
+           });
+        }
+      }
+    });
    });
 
 //GET, PUT and DELETE by ID
 router.route('/boards/:id')
   //Get specific board by ID
+  // body: ...
+  // params: id
+  // headers: x-access-token
   .get(function(req,res) {
     Board.findById(req.params.id, function(err, board) {
       if(err) {
@@ -172,6 +216,9 @@ router.route('/boards/:id')
     });
   })
   //Update board by ID
+  // body: name, description
+  // params: id
+  // headers: x-access-token
   .put(function(req,res) {
     Board.findById(req.params.id, function(err, board) {
       if(err) {
@@ -196,6 +243,9 @@ router.route('/boards/:id')
   //Remove board by ID
   .delete(function(req,res) {
     //Find the board
+    // body: ...
+    // params: id
+    // headers: x-access-token
     Board.findById(req.params.id, function(err, board) {
       if(err) {
         res.json({"success": false, "message": "Board not found"});
@@ -219,40 +269,124 @@ router.route('/boards/:id')
     });
   });
 
-/*===========================
-          Cards API
-============================*/
-//GET and POST
-router.route("/cards")
-  //Get all cards for the board
+//GET and POST for cards
+router.route('/boards/:id/cards')
+  //Get all cards for a board
+  // body: ...
+  // params: id
+  // headers: x-access-token
   .get(function(req, res) {
-    var boardID = req.headers['x-board-id'];
-    Card.find({board: boardID}, function(err, cards) {
+    Card.find({board: req.params.id}, function(err, cards) {
       if(err) {
         res.json({"success": false, "message": "Error finding cards"});
       } else {
-        res.json({"success": true, "message": cards});
+        res.json({"success": false, "message": cards});
       }
     });
   })
-  //Create new card
+  //Create new card for a board
+  // body: content, category
+  // params: id
+  // headers: x-access-token
   .post(function(req, res) {
-    var boardID = req.headers['x-board-id'];
     Card.create({
       content: req.body.content,
       category: req.body.category,
-      board: boardID
-     },
-     function(err, createdCard) {
-       if(err) {
-         res.json({"success": false, "message": "Error creating card"});
-       } else {
-         res.json({"success": true, "message": createdCard});
-       }
-     });
-   });
+      board: req.params.id
+    }, function(err, card) {
+      if(err) {
+        res.json({"success": false, "message": "Error creating cards"});
+      } else {
+        Board.findByIdAndUpdate(
+          req.params.id,
+          {$addToSet: {cards: card._id}},
+          function(err, board) {
+          if(err) {
+            res.json({"success": false, "message": "Error finding and updating board"});
+          } else {
+            res.json({"success": true, "message": card});
+          }
+        });
+      }
+    });
+  });
 
-   //WORK IN PROGRESS...
+//GET, PUT and DELETE by ID for cards
+router.route('/boards/:boardId/cards/:cardId')
+  //Get card by ID
+  // body: ...
+  // params: boardId, cardId
+  // headers: x-access-token
+  .get(function(req, res) {
+    Card.findById(req.params.cardId, function(err, card) {
+      if(err) {
+        res.json({"success": false, "message": "Error finding card"});
+      } else {
+        res.json({"success": true, "message": card});
+      }
+    });
+  })
+  //Update card by ID
+  // body: content, category
+  // params: boardId, cardId
+  // headers: x-access-token
+  .put(function(req, res) {
+    Card.findById(req.params.cardId, function(err, card) {
+      if(err) {
+        res.json({"success": false, "message": "Card not found"});
+      } else {
+        if(req.body.content !== undefined) {
+          card.content = req.body.content; //Edit content
+        }
+        if(req.body.category !== undefined) {
+          card.category = req.body.category; //Edit category
+        }
+        card.save(function(err, savedCard) {
+          if(err) {
+            res.json({"success": false, "message": "Error saving card"});
+          } else {
+            res.json({"success": true, "message": savedCard});
+          }
+        });
+      }
+    })
+  })
+  //Delete card by ID
+  // body: ...
+  // params: boardId, cardId
+  // headers: x-access-token
+  .delete(function(req, res) {
+    Card.findByIdAndRemove(req.params.cardId, function(err) {
+      if(err) {
+        res.json({"success": false, "message": "Error finding and removing card"});
+      } else {
+        Board.update(
+          {_id: req.params.boardId}, {$pull: {cards: req.params.cardId}},
+          function(err) {
+            if(err) {
+              res.json({"success": false, "message": "Error removing card from board"});
+            } else {
+              res.json({"success": true, "message": "Card successfully removed"});
+            }
+          });
+      }
+    });
+  });
+
+//Get the kanban boards for an user
+// body: ...
+// params: id
+// headers: x-access-token
+router.route('/boards/owner/:id')
+  .get(function(req, res) {
+    Board.find({owners: req.params.id}, function(err, boards) {
+      if(err) {
+        res.json({"success": false, "message": "Error finding user boards"});
+      } else {
+        res.json({"success": true, "message": boards});
+      }
+    });
+  });
 
 
 //Start the server
