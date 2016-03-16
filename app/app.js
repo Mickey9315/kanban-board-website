@@ -1,6 +1,7 @@
 (function() {
 
-  var app = angular.module('kanban-board', [angularDragula(angular), 'ngMaterial', 'ngAnimate', 'ngMessages', 'ngRoute']);
+  var app = angular.module('kanban-board', [angularDragula(angular), 'ngMaterial', 'ngAnimate',
+  'ngMessages', 'ngRoute']);
 
   app.config(function($routeProvider) {
     $routeProvider

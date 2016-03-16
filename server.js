@@ -280,7 +280,7 @@ router.route('/boards/:id/cards')
       if(err) {
         res.json({"success": false, "message": "Error finding cards"});
       } else {
-        res.json({"success": false, "message": cards});
+        res.json({"success": true, "message": cards});
       }
     });
   })

@@ -4,7 +4,7 @@ var bcrypt = require('bcryptjs');
 
 //User schema. Defines the user params
 var UserSchema = new Schema({
-	username: { type: String, required: true, index: { unique: true } },
+	username: { type: String, required: true, lowercase: true, index: { unique: true } },
 	email: { type: String, required: true, index: { unique: true } },
 	password: { type: String, required: true }
 });

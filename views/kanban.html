@@ -44,9 +44,9 @@
       <md-whiteframe class="md-whiteframe-1dp" layout layout-align="center center" id='ready-title'>
         <h3>To do</h3>
       </md-whiteframe>
-      <md-list dragula="'first-bag'" dragula-model='readyCards'>
+      <md-list class='list' dragula="'first-bag'" dragula-model='readyCards' scroll-glue>
         <md-card class='ready-card' ng-repeat='card in readyCards'>
-          <md-card-content ng-bind='card.cardContent'></md-card-content>
+          <md-card-content ng-bind='card.content'></md-card-content>
         </md-card>
       </md-list>
     </div>
@@ -55,9 +55,9 @@
       <md-whiteframe class="md-whiteframe-1dp" layout layout-align="center center" id='inprogress-title'>
         <h3>In progress</h3>
       </md-whiteframe>
-      <md-list dragula="'first-bag'" dragula-model='inprogressCards'>
+      <md-list class='list' dragula="'first-bag'" dragula-model='inprogressCards' scroll-glue>
         <md-card class='inprogress-card' ng-repeat='card in inprogressCards'>
-          <md-card-content ng-bind='card.cardContent'></md-card-content>
+          <md-card-content ng-bind='card.content'></md-card-content>
         </md-card>
       </md-list>
     </div>
@@ -66,9 +66,9 @@
       <md-whiteframe class="md-whiteframe-1dp" layout layout-align="center center" id='paused-title'>
         <h3>Paused</h3>
       </md-whiteframe>
-      <md-list dragula="'first-bag'" dragula-model='pausedCards'>
+      <md-list class='list' dragula="'first-bag'" dragula-model='pausedCards' scroll-glue>
         <md-card class='paused-card' ng-repeat='card in pausedCards'>
-          <md-card-content ng-bind='card.cardContent'></md-card-content>
+          <md-card-content ng-bind='card.content'></md-card-content>
         </md-card>
       </md-list>
     </div>
@@ -77,9 +77,9 @@
       <md-whiteframe class="md-whiteframe-1dp" layout layout-align="center center" id='testing-title'>
         <h3>Testing</h3>
       </md-whiteframe>
-      <md-list dragula="'first-bag'" dragula-model='testingCards'>
+      <md-list class='list' dragula="'first-bag'" dragula-model='testingCards' scroll-glue>
         <md-card class='testing-card' ng-repeat='card in testingCards'>
-          <md-card-content ng-bind='card.cardContent'></md-card-content>
+          <md-card-content ng-bind='card.content'></md-card-content>
         </md-card>
       </md-list>
     </div>
@@ -88,9 +88,9 @@
       <md-whiteframe class="md-whiteframe-1dp" layout layout-align="center center" id='done-title'>
         <h3>Done</h3>
       </md-whiteframe>
-      <md-list dragula="'first-bag'" dragula-model='doneCards'>
+      <md-list class='list' dragula="'first-bag'" dragula-model='doneCards' scroll-glue>
         <md-card class='done-card' ng-repeat='card in doneCards'>
-          <md-card-content ng-bind='card.cardContent'></md-card-content>
+          <md-card-content ng-bind='card.content'></md-card-content>
         </md-card>
       </md-list>
     </div>

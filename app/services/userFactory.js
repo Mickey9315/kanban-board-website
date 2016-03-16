@@ -7,6 +7,10 @@
       return $http.get('/users', { headers: {'x-access-token': token } });
     };
 
+    factory.getUserById = function(userID, token) {
+      return $http.get('/users/' + userID, { headers: {'x-access-token': token } });
+    };
+
     factory.authenticate = function(username, password) {
       var jsonObject = { username: username, password: password };
       return $http.post('/authenticate', jsonObject);
@@ -15,7 +19,7 @@
     factory.register = function(username, email, password) {
       var jsonObject = { username: username, password: password, email: email };
       return $http.post('/register', jsonObject);
-    }
+    };
 
     return factory;
   };

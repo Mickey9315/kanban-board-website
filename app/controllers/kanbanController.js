@@ -3,34 +3,51 @@
   var kanbanController = function($scope, $mdSidenav, $log, $mdDialog, $mdToast,
     $location, $window, kanbanFactory, dragulaService) {
 
-    //Card arrays
+    //Boards array
+    $scope.boards = [];
+    //Cards arrays
     $scope.readyCards = [];
     $scope.inprogressCards = [];
     $scope.pausedCards = [];
     $scope.testingCards = [];
     $scope.doneCards = [];
 
+    //Get all boards for the user
+    $scope.getBoardsAndCards = function() {
+      kanbanFactory.getBoards($window.sessionStorage.getItem('userID'),
+      $window.sessionStorage.getItem('token'))
+      .success(function(response) {
+        if(response.success) {
+          //Action after getting the boards
+          angular.forEach(response.message, function(board){
+            $scope.boards.push(board);
+          });
+          $scope.getCards($scope.boards[1]); //provisional (board 1)
+          $scope.actualBoard = $scope.boards[1]; //provisional
+        }
+      })
+    };
+
     //Check the new card category to save
     $scope.checkCategory = function(card) {
-      if(card.cardCategory == 'ready')
+      if(card.category == 'ready')
         $scope.readyCards.push(card);
-      if(card.cardCategory == 'inprogress')
+      if(card.category == 'inprogress')
         $scope.inprogressCards.push(card);
-      if(card.cardCategory == 'paused')
+      if(card.category == 'paused')
         $scope.pausedCards.push(card);
-      if(card.cardCategory == 'testing')
+      if(card.category == 'testing')
         $scope.testingCards.push(card);
-      if(card.cardCategory == 'done')
+      if(card.category == 'done')
         $scope.doneCards.push(card);
     };
 
-    //Get the cards and show them using the factory
-    $scope.getCards = function() {
-      kanbanFactory.getCards($window.sessionStorage.getItem('token'),
-      $window.sessionStorage.getItem('userID'))
+    //Get the cards for a boards and show them using the factory
+    $scope.getCards = function(board) {
+      kanbanFactory.getCards(board._id, $window.sessionStorage.getItem('token'))
         .success(function(response) {
+          //For every card, check the category to draw the board successfully
           angular.forEach(response.message, function(card){
-            //Action after getting the cards
             $scope.checkCategory(card);
           });
         })
@@ -38,7 +55,7 @@
 
     //Create new card
     $scope.addCard = function(card) {
-      kanbanFactory.createCard(card, $window.sessionStorage.getItem('token'))
+      kanbanFactory.createCard($scope.actualBoard._id, card, $window.sessionStorage.getItem('token'))
         .success(function(response) {
           //Action after creating the card
           $scope.checkCategory(response.message);
@@ -47,7 +64,9 @@
 
     //Edit card
     $scope.editCard = function(card) {
-      kanbanFactory.editCard(card, $window.sessionStorage.getItem('token'))
+      console.log('ola k ase ' + $scope.actualBoard._id);
+      console.log('card: ' + card.content + ' ' + card.category);
+      kanbanFactory.editCard($scope.actualBoard._id, card, $window.sessionStorage.getItem('token'))
         .success(function(response) {
           //Action after editing card
         });
@@ -57,21 +76,25 @@
     $scope.$on('first-bag.drop', function (e, el, container, source) {
       var card = el.scope().card;
       if(container.parent().hasClass('ready') == true) {
-        card.cardCategory = 'ready';
+        card.category = 'ready';
       }
       if(container.parent().hasClass('inprogress') == true) {
-        card.cardCategory = 'inprogress';
+        card.category = 'inprogress';
       }
       if(container.parent().hasClass('paused') == true) {
-        card.cardCategory = 'paused';
+        card.category = 'paused';
       }
       if(container.parent().hasClass('testing') == true) {
-        card.cardCategory = 'testing';
+        card.category = 'testing';
       }
       if(container.parent().hasClass('done') == true) {
-        card.cardCategory = 'done';
+        card.category = 'done';
       }
       $scope.editCard(card); //Edita la tarjeta y la guarda
+    });
+
+    $scope.$on('first-bag.over', function (e, el) {
+      console.log('pasando por encima');
     });
 
     //Left sidenav action
@@ -104,9 +127,8 @@
       })
       .then(function(answer) {
         //Dialog accepted
-        var card = { cardContent: answer.description, cardCategory: 'ready',
-        user: $window.sessionStorage.getItem('userID') };
-        if(card.cardContent != '') {
+        var card = { content: answer.description, category: 'ready' };
+        if(card.content != '') {
           $scope.addCard(card); //Creates new card
         }
       }, function() {
@@ -128,7 +150,8 @@
       };
     }
 
-    $scope.getCards(); //Get all cards when you enter or refresh the application
+    //Get all user boards (and cards) when enter or refresh the application
+    $scope.getBoardsAndCards();
   };
 
   kanbanController.$inject = ['$scope', '$mdSidenav', '$log', '$mdDialog', '$mdToast',
