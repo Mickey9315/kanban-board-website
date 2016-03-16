@@ -64,8 +64,6 @@
 
     //Edit card
     $scope.editCard = function(card) {
-      console.log('ola k ase ' + $scope.actualBoard._id);
-      console.log('card: ' + card.content + ' ' + card.category);
       kanbanFactory.editCard($scope.actualBoard._id, card, $window.sessionStorage.getItem('token'))
         .success(function(response) {
           //Action after editing card
@@ -94,7 +92,6 @@
     });
 
     $scope.$on('first-bag.over', function (e, el) {
-      console.log('pasando por encima');
     });
 
     //Left sidenav action
