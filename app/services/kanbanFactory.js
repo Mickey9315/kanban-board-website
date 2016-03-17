@@ -40,7 +40,7 @@
     };
 
     factory.logout = function() {
-      return $http.post('/logout');
+      return $http.post('/users/logout');
     };
 
     return factory;

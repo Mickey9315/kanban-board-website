@@ -28,7 +28,7 @@ app.use(bodyParser.urlencoded({"extended" : false}));
 // body: username, password
 // params: ...
 // headers: ...
-router.post('/authenticate', function(req, res) {
+router.post('/users/authenticate', function(req, res) {
   User.findOne({
     username: req.body.username
   }, function(err, user) {
@@ -58,7 +58,7 @@ router.post('/authenticate', function(req, res) {
 // body: username, email, password
 // params: ...
 // headers: ...
-router.post('/register', function(req, res) {
+router.post('/users/register', function(req, res) {
   User.findOne({
     username: req.body.username
   }, function(err, user) {
@@ -93,7 +93,7 @@ router.post('/register', function(req, res) {
 // body: ...
 // params: ...
 // headers: ...
-router.post('/logout', function(req, res) {
+router.post('/users/logout', function(req, res) {
   res.json({ "success": true, "message": 'User logout successfully' });
 });
 

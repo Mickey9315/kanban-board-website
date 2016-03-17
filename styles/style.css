@@ -134,3 +134,7 @@ md-toolbar-tools {
 .done-card {
   border-left: 6px solid #FFC107;
 }
+
+.left-card {
+  color: #212121;
+}
