@@ -23,12 +23,10 @@
             $scope.boards.push(board);
           });
           if($scope.boards.length !== 0) { //if the user owns any board
-            $scope.boards.reverse();
-            $scope.getCards($scope.boards[0]); //provisional (board 1)
-            $scope.actualBoard = $scope.boards[0]; //provisional
-            $scope.toolbarTitle = $scope.boards[0].name; //set toolbar title
+            $scope.getCards($scope.boards[0]);
+            $scope.actualBoard = $scope.boards[0];
+            $scope.toolbarTitle = $scope.boards[0].name;
           } else { //if not, creates one
-            console.log('userID: ' + $window.sessionStorage.getItem('userID'));
             var jsonBoard = {
               name: 'My kanban board',
               description: 'This is your first kanban board!',
@@ -105,7 +103,6 @@
     $scope.addBoard = function(board) {
       kanbanFactory.createBoard(board, $window.sessionStorage.getItem('token'))
         .success(function(response) {
-          console.log(response.message);
           $scope.boards.push(response.message);
         });
     }

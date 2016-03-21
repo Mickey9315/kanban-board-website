@@ -176,7 +176,6 @@ router.route("/boards")
   // params: ...
   // headers: x-access-token
   .post(function(req, res) {
-    console.log(req.body.name + ' ' + req.body.description + ' ' + req.body.owner);
     Board.create({ //creates board
       name: req.body.name,
       description: req.body.description,
