@@ -8,7 +8,7 @@
         <md-icon md-svg-icon="img/icons/ic_menu_white_24px.svg"></md-icon>
       </md-button>
       <h2>
-        <span>TaskBan</span>
+        <span ng-bind="toolbarTitle"></span>
       </h2>
       <span flex></span>
       <!-- Add new card -->
@@ -23,7 +23,7 @@
         <md-menu-content width="6">
           <!-- Logout -->
           <md-menu-item>
-            <md-button ng-click="logout()">
+            <md-button ng-click="logoutDialog()">
               <md-icon md-svg-icon="img/icons/ic_exit_to_app_black_24px.svg"></md-icon>
               Logout
             </md-button>
@@ -40,7 +40,7 @@
       </md-toolbar>
       <md-content>
         <md-list>
-          <md-list-item class="md-3-line" ng-repeat="board in boards" ng-click='toggleLeft()'>
+          <md-list-item class="md-3-line" ng-repeat="board in boards" aria-label="Select board" ng-click='switchBoard(board)'>
             <div class="md-list-item-text">
               <h3 ng-bind='board.name'></h3>
               <p ng-bind='board.description'></p>
@@ -107,7 +107,7 @@
     </div>
     <!-- Custom dialog -->
     <script type='text/ng-template' id='dialog1.tmpl.html'>
-      <md-dialog aria-label="Nueva tarjeta" ng-cloak>
+      <md-dialog aria-label="New card" ng-cloak>
         <form>
         <md-toolbar>
           <div class="md-toolbar-tools">

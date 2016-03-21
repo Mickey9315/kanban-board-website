@@ -22,8 +22,21 @@
           angular.forEach(response.message, function(board){
             $scope.boards.push(board);
           });
-          $scope.getCards($scope.boards[1]); //provisional (board 1)
-          $scope.actualBoard = $scope.boards[1]; //provisional
+          if($scope.boards.length !== 0) { //if the user owns any board
+            $scope.boards.reverse();
+            $scope.getCards($scope.boards[0]); //provisional (board 1)
+            $scope.actualBoard = $scope.boards[0]; //provisional
+            $scope.toolbarTitle = $scope.boards[0].name; //set toolbar title
+          } else { //if not, creates one
+            console.log('userID: ' + $window.sessionStorage.getItem('userID'));
+            var jsonBoard = {
+              name: 'My kanban board',
+              description: 'This is your first kanban board!',
+              owner: $window.sessionStorage.getItem('userID')
+            };
+            $scope.addBoard(jsonBoard);
+            $scope.toolbarTitle = jsonBoard.name;
+          }
         }
       })
     };
@@ -70,6 +83,33 @@
         });
     };
 
+    $scope.clearBoard = function() {
+      //Clear cards arrays
+      $scope.readyCards = [];
+      $scope.inprogressCards = [];
+      $scope.pausedCards = [];
+      $scope.testingCards = [];
+      $scope.doneCards = [];
+    };
+
+    //Displays all cards for the selected board
+    $scope.switchBoard = function(board) {
+      $scope.clearBoard();
+      $scope.toolbarTitle = board.name; //set toolbar title
+      $scope.actualBoard = board;
+      $scope.getCards(board);
+      $scope.toggleLeft();
+    };
+
+    //Creates new board
+    $scope.addBoard = function(board) {
+      kanbanFactory.createBoard(board, $window.sessionStorage.getItem('token'))
+        .success(function(response) {
+          console.log(response.message);
+          $scope.boards.push(response.message);
+        });
+    }
+
     //Handles moving cards to different containers, and editing and saving them
     $scope.$on('first-bag.drop', function (e, el, container, source) {
       var card = el.scope().card;
@@ -101,19 +141,30 @@
       });
     };
 
-    //Logout and go back to login screen
-    $scope.logout = function() {
-      kanbanFactory.logout()
-        .success(function(response) {
-          //remove the user token and user ID from the sessionStorage
-          $window.sessionStorage.removeItem('token');
-          $window.sessionStorage.removeItem('userID');
-          //go to login page
-          $location.path('/login');
-        });
-    }
+    //logout function
+    $scope.logoutDialog = function(ev) {
+      var confirm = $mdDialog.confirm()
+            .title('Logout')
+            .textContent('Are you sure you want to close the session?')
+            .ariaLabel('Logout')
+            .targetEvent(ev)
+            .ok('ok')
+            .cancel('cancel');
+      $mdDialog.show(confirm).then(function() {
+        kanbanFactory.logout()
+          .success(function(response) {
+            //remove the user token and user ID from the sessionStorage
+            $window.sessionStorage.removeItem('token');
+            $window.sessionStorage.removeItem('userID');
+            //go to login page
+            $location.path('/login');
+          });
+      }, function() {
+        //cancel
+      });
+    };
 
-    //Use with new angular-material versions (1.1.x)
+    //Use with newer angular-material versions (1.1.x)
     /*$scope.addNewCardDialog = function(ev) {
       // Appending dialog to document.body to cover sidenav in docs app
       var confirm = $mdDialog.prompt()
@@ -166,7 +217,7 @@
       $scope.answer = function(answer) {
         $mdDialog.hide($scope.inputDialog);
       };
-    }
+    };
 
     //Get all user boards (and cards) when enter or refresh the application
     $scope.getBoardsAndCards();

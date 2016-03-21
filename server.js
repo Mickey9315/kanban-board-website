@@ -176,29 +176,20 @@ router.route("/boards")
   // params: ...
   // headers: x-access-token
   .post(function(req, res) {
-    Board.findOne({name: req.body.name}, function(err, board) {
+    console.log(req.body.name + ' ' + req.body.description + ' ' + req.body.owner);
+    Board.create({ //creates board
+      name: req.body.name,
+      description: req.body.description,
+      owners: [ req.body.owner ]
+    },
+    function(err, createdBoard) {
       if(err) {
-        res.json({"success": false, "message": "Error searching board"});
+        res.json({"success": false, "message": "Error creating board"});
       } else {
-        if(board !== null) { //if board exists
-          res.json({"success": false, "message": "Board already exists with this name"});
-        } else { //if board does not exists
-          Board.create({ //creates board
-            name: req.body.name,
-            description: req.body.description,
-            owners: [ req.body.owner ]
-           },
-           function(err, createdBoard) {
-             if(err) {
-               res.json({"success": false, "message": "Error creating board"});
-             } else {
-               res.json({"success": true, "message": createdBoard});
-             }
-           });
-        }
+        res.json({"success": true, "message": createdBoard});
       }
     });
-   });
+  });
 
 //GET, PUT and DELETE by ID
 router.route('/boards/:id')
