@@ -113,8 +113,29 @@
         });
     }
 
+    //Use with new angular-material versions (1.1.x)
+    /*$scope.addNewCardDialog = function(ev) {
+      // Appending dialog to document.body to cover sidenav in docs app
+      var confirm = $mdDialog.prompt()
+            .title('Create new card')
+            .textContent('Enter the description of your new card')
+            .placeholder('description')
+            .ariaLabel('Card description')
+            .targetEvent(ev)
+            .ok('save')
+            .cancel('cancel');
+      $mdDialog.show(confirm).then(function(result) {
+        var card = { content: answer.description, category: 'ready' };
+        if(card.content != '') {
+          $scope.addCard(card); //Creates new card
+        }
+      }, function() {
+        //Empty description - Doesn't create card
+      });
+    };*/
+
     //Show the dialog to create a new card
-    $scope.AddNewCardDialog = function(ev) {
+    $scope.addNewCardDialog = function(ev) {
       $mdDialog.show({
         controller: DialogController,
         templateUrl: 'dialog1.tmpl.html',

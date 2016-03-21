@@ -3,17 +3,17 @@ body, html {
   -webkit-font-smoothing: antialiased;
 }
 
-md-list {
-  padding: 5dp;
-  margin: 2%;
-  background-color: rgba(96, 125, 139, 0.14);
-  border-radius: 5px;
-}
-
 md-whiteframe {
   color: #FFF;
   text-align: center;
   margin: 12px;
+  border-radius: 5px;
+}
+
+.kanban-list {
+  padding: 5dp;
+  margin: 2%;
+  background-color: rgba(96, 125, 139, 0.14);
   border-radius: 5px;
 }
 
@@ -133,8 +133,4 @@ md-toolbar-tools {
 
 .done-card {
   border-left: 6px solid #FFC107;
-}
-
-.left-card {
-  color: #212121;
 }
