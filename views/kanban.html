@@ -35,8 +35,15 @@
   <md-content id="kanbanlayout" layout="row" layout-xs="column">
     <!-- Left sidenav -->
     <md-sidenav class="md-sidenav-left" md-component-id="left">
-      <md-toolbar class="md-theme-light">
-        <h1 class="md-toolbar-tools">My kanban boards</h1>
+      <md-toolbar class="md-theme-light" layout="row">
+        <div class="md-toolbar-tools">
+          <h1>My kanban boards</h1>
+          <span flex></span>
+          <!-- Add new kanban board -->
+          <md-button class="md-icon-button" aria-label="Add new board" ng-click="addNewBoardDialog($event)">
+            <md-icon md-svg-icon="img/icons/ic_add_white_24px.svg"></md-icon>
+          </md-button>
+        </div>
       </md-toolbar>
       <md-content>
         <md-list>
@@ -105,13 +112,14 @@
         </md-card>
       </md-list>
     </div>
-    <!-- Custom dialog -->
-    <script type='text/ng-template' id='dialog1.tmpl.html'>
+
+    <!-- Create card dialog -->
+    <script type='text/ng-template' id='cardDialog.tmpl.html'>
       <md-dialog aria-label="New card" ng-cloak>
         <form>
         <md-toolbar>
           <div class="md-toolbar-tools">
-            <h2>New task</h2>
+            <h2>New card</h2>
             <span flex></span>
             <md-button class="md-icon-button" ng-click="cancel()">
               <md-icon md-svg-src="img/icons/ic_clear_white_24px.svg" aria-label="Close dialog"></md-icon>
@@ -122,13 +130,47 @@
           <div class="md-dialog-content">
             <md-content layout-padding class="autoScroll">
               <md-input-container class="md-block">
-                <input type="text" ng-model="inputDialog.description" placeholder="Description">
+                <input type="text" ng-model="inputDialog.description" placeholder="Description" required>
               </md-input-container>
             </md-content>
           </div>
         </md-dialog-content>
         <div class="md-actions" layout="row">
-          <md-button class="md-raised md-primary" ng-click="answer()">
+          <md-button ng-click="answer()">
+            OK
+          </md-button>
+        </div>
+        </form>
+      </md-dialog>
+    </script>
+
+    <!-- Create board dialog -->
+    <script type='text/ng-template' id='boardDialog.tmpl.html'>
+      <md-dialog aria-label="New board" ng-cloak>
+        <form>
+        <md-toolbar>
+          <div class="md-toolbar-tools">
+            <h2>New board</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+              <md-icon md-svg-src="img/icons/ic_clear_white_24px.svg" aria-label="Close dialog"></md-icon>
+            </md-button>
+          </div>
+        </md-toolbar>
+        <md-dialog-content style="max-width:600px;max-height:400px;min-width:300px;min-height:200px">
+          <div class="md-dialog-content">
+            <md-content layout-padding class="autoScroll">
+              <md-input-container class="md-block">
+                <input type="text" ng-model="inputDialog.name" placeholder="Name" required>
+              </md-input-container>
+              <md-input-container class="md-block">
+                <input type="text" ng-model="inputDialog.description" placeholder="Description" required>
+              </md-input-container>
+            </md-content>
+          </div>
+        </md-dialog-content>
+        <div class="md-actions" layout="row">
+          <md-button ng-click="answer()">
             OK
           </md-button>
         </div>

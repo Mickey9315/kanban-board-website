@@ -186,7 +186,7 @@
     $scope.addNewCardDialog = function(ev) {
       $mdDialog.show({
         controller: DialogController,
-        templateUrl: 'dialog1.tmpl.html',
+        templateUrl: 'cardDialog.tmpl.html',
         parent: angular.element(document.body),
         targetEvent: ev,
         clickOutsideToClose:true
@@ -196,6 +196,34 @@
         var card = { content: answer.description, category: 'ready' };
         if(card.content != '') {
           $scope.addCard(card); //Creates new card
+        } else {
+          $mdToast.show($mdToast.simple().textContent("Error: card is empty. Not created"));
+        }
+      }, function() {
+        //Dialog cancelled
+      });
+    };
+
+    //Show the dialog to create a new board
+    $scope.addNewBoardDialog = function(ev) {
+      $mdDialog.show({
+        controller: DialogController,
+        templateUrl: 'boardDialog.tmpl.html',
+        parent: angular.element(document.body),
+        targetEvent: ev,
+        clickOutsideToClose:true
+      })
+      .then(function(answer) {
+        //Dialog accepted
+        var board = {
+          name: answer.name,
+          description: answer.description,
+          owner: $window.sessionStorage.getItem('userID')
+        };
+        if(board.name != '' && board.description != '') {
+          $scope.addBoard(board); //Creates new kanban board
+        } else {
+          $mdToast.show($mdToast.simple().textContent("Error: board is empty. Not created"));
         }
       }, function() {
         //Dialog cancelled
