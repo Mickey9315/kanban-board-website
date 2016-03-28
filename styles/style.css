@@ -134,3 +134,20 @@ md-toolbar-tools {
 .done-card {
   border-left: 6px solid #FFC107;
 }
+
+.md-button.md-fab.md-fab-bottom-right {
+  top: auto;
+  right: 20px;
+  bottom: 20px;
+  left: auto;
+  position: fixed;
+}
+
+.scrollable-nav-content {
+  position: absolute;
+  top: 64px;
+  bottom: 0px;
+  right: 0px;
+  width: 100%;
+  overflow-y: scroll;
+}
