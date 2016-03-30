@@ -12,6 +12,16 @@ If you want to test the application, follow the steps below:
 
 * Install and configure *NodeJS* and *MongoDB*.
 * Execute ``npm install`` to install the dependencies.
+* Create a ``config.js`` file like the following:
+```
+module.exports = {
+	development: {
+		db: 'mongodb://localhost:27017/kanbanDB',
+		secret: 'yoursecret',
+		port: process.env.PORT || 8080
+	}
+}
+```
 * Set the NODE_ENV variable to *development*.
 * Start the web application with ``node server.js``.
 
