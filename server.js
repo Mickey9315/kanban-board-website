@@ -6,15 +6,14 @@ var router = express.Router();
 var morgan = require('morgan');
 var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken');
-var config = require('./config');
 var User = require('./models/user');
 var Board = require('./models/board');
 var Card = require('./models/card');
+var env = process.env.NODE_ENV;
+var config = require('./config')[env];
 
 //Configuration
-var port = process.env.PORT || 8080;
-var IPAddress = '192.168.0.165';
-mongoose.connect(config.database); //connect to database
+mongoose.connect(config.db); //connect to database
 app.set('secret', config.secret); //secret variable
 app.use(morgan("dev")); //log the requests to the console
 app.use(bodyParser.json());
@@ -381,5 +380,5 @@ router.route('/boards/owner/:id')
 
 //Start the server
 app.use(express.static(__dirname + '/'), router);
-app.listen(port, IPAddress);
-console.log('Magic happens at http://' + IPAddress + ':' + port);
+app.listen(config.port);
+console.log('Magic happens at http://localhost:' + config.port);

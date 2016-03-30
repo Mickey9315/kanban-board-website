@@ -12,6 +12,7 @@ If you want to test the application, follow the steps below:
 
 * Install and configure *NodeJS* and *MongoDB*.
 * Execute ``npm install`` to install the dependencies.
+* Set the NODE_ENV variable to *development*.
 * Start the web application with ``node server.js``.
 
 
