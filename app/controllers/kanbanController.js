@@ -141,7 +141,7 @@
     //logout function
     $scope.logoutDialog = function(ev) {
       var confirm = $mdDialog.confirm()
-            .title('Logout')
+            .title('Close session')
             .textContent('Are you sure you want to close the session?')
             .ariaLabel('Logout')
             .targetEvent(ev)
@@ -155,6 +155,33 @@
             $window.sessionStorage.removeItem('userID');
             //go to login page
             $location.path('/login');
+          });
+      }, function() {
+        //cancel
+      });
+    };
+
+    //Delete card in $scope array and in database
+    $scope.deleteCard = function(index, card) {
+      var confirm = $mdDialog.confirm()
+            .title('Delete card')
+            .textContent('Are you sure you want to delete this card?')
+            .ariaLabel('Delete card')
+            .ok('ok')
+            .cancel('cancel');
+      $mdDialog.show(confirm).then(function() {
+        kanbanFactory.deleteCard($scope.actualBoard._id, card, $window.sessionStorage.getItem('token'))
+          .success(function(response) {
+            if(card.category == 'ready')
+              $scope.readyCards.splice(index, 1);
+            else if(card.category == 'inprogress')
+              $scope.inprogressCards.splice(index, 1);
+            else if(card.category == 'paused')
+              $scope.pausedCards.splice(index, 1);
+            else if(card.category == 'testing')
+              $scope.testingCards.splice(index, 1);
+            else if(card.category == 'done')
+              $scope.doneCards.splice(index, 1);
           });
       }, function() {
         //cancel

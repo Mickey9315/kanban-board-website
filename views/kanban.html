@@ -16,16 +16,15 @@
         <md-button class="md-icon-button" aria-label="More" ng-click="$mdOpenMenu($event)">
           <md-icon md-svg-icon="img/icons/ic_more_vert_white_24px.svg"></md-icon>
         </md-button>
-        <md-menu-content width="6">
+        <md-menu-content width="4">
           <!-- Logout -->
           <md-menu-item>
             <md-button ng-click="logoutDialog()">
-              <md-icon md-svg-icon="img/icons/ic_exit_to_app_black_24px.svg"></md-icon>
-              Logout
+              Close session
             </md-button>
           </md-menu-item>
         </md-menu-content>
-        </md-menu>
+      </md-menu>
     </div>
   </md-toolbar>
   <md-content id="kanbanlayout" layout="row" layout-xs="column">
@@ -61,8 +60,18 @@
         <h3>To do</h3>
       </md-whiteframe>
       <md-list class='list kanban-list' dragula="'first-bag'" dragula-model='readyCards'>
-        <md-card class='ready-card' ng-repeat='card in readyCards'>
+        <md-card layout="row" class='ready-card' ng-repeat='card in readyCards'>
           <md-card-content ng-bind='card.content'></md-card-content>
+          <span flex></span>
+          <md-menu>
+            <md-button class="md-icon-button" aria-label="More" ng-click="$mdOpenMenu($event)">
+              <md-icon md-svg-icon="img/icons/ic_more_vert_grey_24px.svg"></md-icon>
+            </md-button>
+            <md-menu-content width="4">
+              <md-menu-item><md-button ng-click="">Edit card</md-button></md-menu-item>
+              <md-menu-item><md-button ng-click="deleteCard($index, card)">Delete card</md-button></md-menu-item>
+            </md-menu-content>
+          </md-menu>
         </md-card>
       </md-list>
     </div>
@@ -72,8 +81,18 @@
         <h3>In progress</h3>
       </md-whiteframe>
       <md-list class='list kanban-list' dragula="'first-bag'" dragula-model='inprogressCards'>
-        <md-card class='inprogress-card' ng-repeat='card in inprogressCards'>
+        <md-card layout="row" class='inprogress-card' ng-repeat='card in inprogressCards'>
           <md-card-content ng-bind='card.content'></md-card-content>
+          <span flex></span>
+          <md-menu>
+            <md-button class="md-icon-button" aria-label="More" ng-click="$mdOpenMenu($event)">
+              <md-icon md-svg-icon="img/icons/ic_more_vert_grey_24px.svg"></md-icon>
+            </md-button>
+            <md-menu-content width="4">
+              <md-menu-item><md-button ng-click="">Edit card</md-button></md-menu-item>
+              <md-menu-item><md-button ng-click="deleteCard($index, card)">Delete card</md-button></md-menu-item>
+            </md-menu-content>
+          </md-menu>
         </md-card>
       </md-list>
     </div>
@@ -83,8 +102,18 @@
         <h3>Paused</h3>
       </md-whiteframe>
       <md-list class='list kanban-list' dragula="'first-bag'" dragula-model='pausedCards'>
-        <md-card class='paused-card' ng-repeat='card in pausedCards'>
+        <md-card layout="row" class='paused-card' ng-repeat='card in pausedCards'>
           <md-card-content ng-bind='card.content'></md-card-content>
+          <span flex></span>
+          <md-menu>
+            <md-button class="md-icon-button" aria-label="More" ng-click="$mdOpenMenu($event)">
+              <md-icon md-svg-icon="img/icons/ic_more_vert_grey_24px.svg"></md-icon>
+            </md-button>
+            <md-menu-content width="4">
+              <md-menu-item><md-button ng-click="">Edit card</md-button></md-menu-item>
+              <md-menu-item><md-button ng-click="deleteCard($index, card)">Delete card</md-button></md-menu-item>
+            </md-menu-content>
+          </md-menu>
         </md-card>
       </md-list>
     </div>
@@ -94,8 +123,18 @@
         <h3>Testing</h3>
       </md-whiteframe>
       <md-list class='list kanban-list' dragula="'first-bag'" dragula-model='testingCards'>
-        <md-card class='testing-card' ng-repeat='card in testingCards'>
+        <md-card layout="row" class='testing-card' ng-repeat='card in testingCards'>
           <md-card-content ng-bind='card.content'></md-card-content>
+          <span flex></span>
+          <md-menu>
+            <md-button class="md-icon-button" aria-label="More" ng-click="$mdOpenMenu($event)">
+              <md-icon md-svg-icon="img/icons/ic_more_vert_grey_24px.svg"></md-icon>
+            </md-button>
+            <md-menu-content width="4">
+              <md-menu-item><md-button ng-click="">Edit card</md-button></md-menu-item>
+              <md-menu-item><md-button ng-click="deleteCard($index, card)">Delete card</md-button></md-menu-item>
+            </md-menu-content>
+          </md-menu>
         </md-card>
       </md-list>
     </div>
@@ -105,8 +144,18 @@
         <h3>Done</h3>
       </md-whiteframe>
       <md-list class='list kanban-list' dragula="'first-bag'" dragula-model='doneCards'>
-        <md-card class='done-card' ng-repeat='card in doneCards'>
+        <md-card layout="row" class='done-card' ng-repeat='card in doneCards'>
           <md-card-content ng-bind='card.content'></md-card-content>
+          <span flex></span>
+          <md-menu>
+            <md-button class="md-icon-button" aria-label="More" ng-click="$mdOpenMenu($event)">
+              <md-icon md-svg-icon="img/icons/ic_more_vert_grey_24px.svg"></md-icon>
+            </md-button>
+            <md-menu-content width="4">
+              <md-menu-item><md-button ng-click="">Edit card</md-button></md-menu-item>
+              <md-menu-item><md-button ng-click="deleteCard($index, card)">Delete card</md-button></md-menu-item>
+            </md-menu-content>
+          </md-menu>
         </md-card>
       </md-list>
     </div>
