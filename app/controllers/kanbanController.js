@@ -12,6 +12,17 @@
     $scope.testingCards = [];
     $scope.doneCards = [];
 
+    //Dialog actions
+    $scope.hide = function() {
+      $mdDialog.hide();
+    };
+    $scope.cancel = function() {
+      $mdDialog.cancel();
+    };
+    $scope.answer = function(answer) {
+      $mdDialog.hide($scope.inputDialog);
+    };
+
     //Get all boards for the user
     $scope.getBoardsAndCards = function() {
       kanbanFactory.getBoards($window.sessionStorage.getItem('userID'),
@@ -161,8 +172,32 @@
       });
     };
 
+    //Show the dialog to edit a card
+    $scope.editCardDialog = function(ev, index, card) {
+      $scope.inputDialog = { description: card.content, category: card.category };
+      $mdDialog.show({
+        controller: kanbanController,
+        templateUrl: 'editCardDialog.tmpl.html',
+        parent: angular.element(document.body),
+        targetEvent: ev,
+        clickOutsideToClose:true
+      })
+      .then(function(answer) {
+        //Dialog accepted
+        card.content = answer.description;
+        card.category = answer.category;
+        if(card.content != '') {
+          $scope.editCard(card); //Creates new card
+        } else {
+          $mdToast.show($mdToast.simple().textContent("Error: card is empty. Not modified"));
+        }
+      }, function() {
+        //Dialog cancelled
+      });
+    };
+
     //Delete card in $scope array and in database
-    $scope.deleteCard = function(index, card) {
+    $scope.deleteCardDialog = function(index, card) {
       var confirm = $mdDialog.confirm()
             .title('Delete card')
             .textContent('Are you sure you want to delete this card?')
@@ -211,8 +246,9 @@
 
     //Show the dialog to create a new card
     $scope.addNewCardDialog = function(ev) {
+      $scope.inputDialog = { description: '', category: '' };
       $mdDialog.show({
-        controller: DialogController,
+        controller: kanbanController,
         templateUrl: 'cardDialog.tmpl.html',
         parent: angular.element(document.body),
         targetEvent: ev,
@@ -233,8 +269,9 @@
 
     //Show the dialog to create a new board
     $scope.addNewBoardDialog = function(ev) {
+      $scope.inputDialog = { name: '', description: '' };
       $mdDialog.show({
-        controller: DialogController,
+        controller: kanbanController,
         templateUrl: 'boardDialog.tmpl.html',
         parent: angular.element(document.body),
         targetEvent: ev,
@@ -255,20 +292,6 @@
       }, function() {
         //Dialog cancelled
       });
-    };
-
-    //Dialog controller
-    function DialogController($scope, $mdDialog) {
-      $scope.inputDialog = { description: '', category: '' };
-      $scope.hide = function() {
-        $mdDialog.hide();
-      };
-      $scope.cancel = function() {
-        $mdDialog.cancel();
-      };
-      $scope.answer = function(answer) {
-        $mdDialog.hide($scope.inputDialog);
-      };
     };
 
     //Get all user boards (and cards) when enter or refresh the application

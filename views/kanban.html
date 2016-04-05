@@ -68,8 +68,8 @@
               <md-icon md-svg-icon="img/icons/ic_more_vert_grey_24px.svg"></md-icon>
             </md-button>
             <md-menu-content width="4">
-              <md-menu-item><md-button ng-click="">Edit card</md-button></md-menu-item>
-              <md-menu-item><md-button ng-click="deleteCard($index, card)">Delete card</md-button></md-menu-item>
+              <md-menu-item><md-button ng-click="editCardDialog($event, $index, card)">Edit card</md-button></md-menu-item>
+              <md-menu-item><md-button ng-click="deleteCardDialog($index, card)">Delete card</md-button></md-menu-item>
             </md-menu-content>
           </md-menu>
         </md-card>
@@ -89,8 +89,8 @@
               <md-icon md-svg-icon="img/icons/ic_more_vert_grey_24px.svg"></md-icon>
             </md-button>
             <md-menu-content width="4">
-              <md-menu-item><md-button ng-click="">Edit card</md-button></md-menu-item>
-              <md-menu-item><md-button ng-click="deleteCard($index, card)">Delete card</md-button></md-menu-item>
+              <md-menu-item><md-button ng-click="editCardDialog($event, $index, card)">Edit card</md-button></md-menu-item>
+              <md-menu-item><md-button ng-click="deleteCardDialog($index, card)">Delete card</md-button></md-menu-item>
             </md-menu-content>
           </md-menu>
         </md-card>
@@ -110,8 +110,8 @@
               <md-icon md-svg-icon="img/icons/ic_more_vert_grey_24px.svg"></md-icon>
             </md-button>
             <md-menu-content width="4">
-              <md-menu-item><md-button ng-click="">Edit card</md-button></md-menu-item>
-              <md-menu-item><md-button ng-click="deleteCard($index, card)">Delete card</md-button></md-menu-item>
+              <md-menu-item><md-button ng-click="editCardDialog($event, $index, card)">Edit card</md-button></md-menu-item>
+              <md-menu-item><md-button ng-click="deleteCardDialog($index, card)">Delete card</md-button></md-menu-item>
             </md-menu-content>
           </md-menu>
         </md-card>
@@ -131,8 +131,8 @@
               <md-icon md-svg-icon="img/icons/ic_more_vert_grey_24px.svg"></md-icon>
             </md-button>
             <md-menu-content width="4">
-              <md-menu-item><md-button ng-click="">Edit card</md-button></md-menu-item>
-              <md-menu-item><md-button ng-click="deleteCard($index, card)">Delete card</md-button></md-menu-item>
+              <md-menu-item><md-button ng-click="editCardDialog($event, $index, card)">Edit card</md-button></md-menu-item>
+              <md-menu-item><md-button ng-click="deleteCardDialog($index, card)">Delete card</md-button></md-menu-item>
             </md-menu-content>
           </md-menu>
         </md-card>
@@ -152,8 +152,8 @@
               <md-icon md-svg-icon="img/icons/ic_more_vert_grey_24px.svg"></md-icon>
             </md-button>
             <md-menu-content width="4">
-              <md-menu-item><md-button ng-click="">Edit card</md-button></md-menu-item>
-              <md-menu-item><md-button ng-click="deleteCard($index, card)">Delete card</md-button></md-menu-item>
+              <md-menu-item><md-button ng-click="editCardDialog($event, $index, card)">Edit card</md-button></md-menu-item>
+              <md-menu-item><md-button ng-click="deleteCardDialog($index, card)">Delete card</md-button></md-menu-item>
             </md-menu-content>
           </md-menu>
         </md-card>
@@ -222,7 +222,38 @@
           </md-button>
         </div>
         </form>
-      </md-dialog>
-    </script>
+        </md-dialog>
+      </script>
+
+      <!-- Edit card dialog -->
+      <script type='text/ng-template' id='editCardDialog.tmpl.html'>
+        <md-dialog aria-label="Edit card" ng-cloak>
+          <form>
+          <md-toolbar>
+            <div class="md-toolbar-tools">
+              <h2>Edit card</h2>
+              <span flex></span>
+              <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon md-svg-src="img/icons/ic_clear_white_24px.svg" aria-label="Close dialog"></md-icon>
+              </md-button>
+            </div>
+          </md-toolbar>
+          <md-dialog-content style="max-width:800px;max-height:810px;min-width:300px;min-height:100px">
+            <div class="md-dialog-content">
+              <md-content layout-padding class="autoScroll">
+                <md-input-container class="md-block">
+                  <input type="text" ng-model="inputDialog.description" placeholder="Description" required>
+                </md-input-container>
+              </md-content>
+            </div>
+          </md-dialog-content>
+          <div class="md-actions" layout="row">
+            <md-button ng-click="answer()">
+              OK
+            </md-button>
+          </div>
+          </form>
+        </md-dialog>
+      </script>
   </md-content>
 </div>
