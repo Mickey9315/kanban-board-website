@@ -1,7 +1,7 @@
 (function() {
 
   var kanbanController = function($scope, $mdSidenav, $log, $mdDialog, $mdToast,
-    $location, $window, kanbanFactory, dragulaService) {
+    $location, $window, $interval, kanbanFactory, dragulaService) {
 
     //Boards array
     $scope.boards = [];
@@ -118,8 +118,16 @@
         });
     }
 
+    $scope.$on('first-bag.drag', function (e, el, container, source) {
+      $scope.dragging = true;
+      console.log($scope.dragging);
+    });
+
     //Handles moving cards to different containers, and editing and saving them
     $scope.$on('first-bag.drop', function (e, el, container, source) {
+      $scope.dragging = false;
+      console.log($scope.dragging);
+
       var card = el.scope().card;
       if(container.parent().hasClass('ready') == true) {
         card.category = 'ready';
@@ -137,9 +145,6 @@
         card.category = 'done';
       }
       $scope.editCard(card); //Edita la tarjeta y la guarda
-    });
-
-    $scope.$on('first-bag.over', function (e, el) {
     });
 
     //Left sidenav action
@@ -172,27 +177,48 @@
       });
     };
 
-    //Show the dialog to edit a card
-    $scope.editCardDialog = function(ev, index, card) {
-      $scope.inputDialog = { description: card.content, category: card.category };
-      $mdDialog.show({
-        controller: kanbanController,
-        templateUrl: 'editCardDialog.tmpl.html',
-        parent: angular.element(document.body),
-        targetEvent: ev,
-        clickOutsideToClose:true
-      })
-      .then(function(answer) {
-        //Dialog accepted
-        card.content = answer.description;
-        card.category = answer.category;
-        if(card.content != '') {
-          $scope.editCard(card); //Creates new card
+    //Show the dialog to create a new card
+    $scope.addNewCardDialog = function(ev) {
+      var confirm = $mdDialog.prompt()
+            .title('Create new card')
+            .textContent('Enter the description')
+            .placeholder('description')
+            .ariaLabel('Card description')
+            .targetEvent(ev)
+            .ok('save')
+            .cancel('cancel');
+      $mdDialog.show(confirm).then(function(result) {
+        var card = { content: result, category: 'ready' };
+        if(card.content != '' && card.content != undefined) {
+          $scope.addCard(card); //Creates new card
         } else {
-          $mdToast.show($mdToast.simple().textContent("Error: card is empty. Not modified"));
+          $mdToast.show($mdToast.simple().textContent("Card was not created"));
         }
       }, function() {
-        //Dialog cancelled
+        //Empty description - Doesn't create card
+        $mdToast.show($mdToast.simple().textContent("Card was not created"));
+      });
+    };
+
+    //Show the dialog to edit a card
+    $scope.editCardDialog = function(ev, index, card) {
+      var confirm = $mdDialog.prompt()
+            .title('Edit card')
+            .placeholder('description')
+            .ariaLabel('Card description')
+            .targetEvent(ev)
+            .ok('save')
+            .cancel('cancel');
+      $mdDialog.show(confirm).then(function(result) {
+        if(result != '' && result != undefined) {
+          card.content = result;
+          $scope.editCard(card); //Edit card
+        } else {
+          $mdToast.show($mdToast.simple().textContent("Card was not edited"));
+        }
+      }, function() {
+        //Empty description - Doesn't create card
+        $mdToast.show($mdToast.simple().textContent("Card was not edited"));
       });
     };
 
@@ -223,74 +249,44 @@
       });
     };
 
-    //Use with newer angular-material versions (1.1.x)
-    /*$scope.addNewCardDialog = function(ev) {
-      // Appending dialog to document.body to cover sidenav in docs app
-      var confirm = $mdDialog.prompt()
-            .title('Create new card')
-            .textContent('Enter the description of your new card')
+    //Show the dialog to create a new board
+    $scope.addNewBoardDialog = function(ev) {
+      var board = { owner: $window.sessionStorage.getItem('userID') };
+      var boardTitleDialog = $mdDialog.prompt()
+            .title('Board title')
+            .placeholder('title')
+            .ariaLabel('Board title')
+            .targetEvent(ev)
+            .ok('next')
+            .cancel('cancel');
+      var boardDescriptionDialog = $mdDialog.prompt()
+            .title('Board description')
             .placeholder('description')
-            .ariaLabel('Card description')
+            .ariaLabel('Board description')
             .targetEvent(ev)
             .ok('save')
             .cancel('cancel');
-      $mdDialog.show(confirm).then(function(result) {
-        var card = { content: answer.description, category: 'ready' };
-        if(card.content != '') {
-          $scope.addCard(card); //Creates new card
-        }
-      }, function() {
-        //Empty description - Doesn't create card
-      });
-    };*/
-
-    //Show the dialog to create a new card
-    $scope.addNewCardDialog = function(ev) {
-      $scope.inputDialog = { description: '', category: '' };
-      $mdDialog.show({
-        controller: kanbanController,
-        templateUrl: 'cardDialog.tmpl.html',
-        parent: angular.element(document.body),
-        targetEvent: ev,
-        clickOutsideToClose:true
-      })
-      .then(function(answer) {
-        //Dialog accepted
-        var card = { content: answer.description, category: 'ready' };
-        if(card.content != '') {
-          $scope.addCard(card); //Creates new card
+      //Show board title dialog
+      $mdDialog.show(boardTitleDialog).then(function(resultTitle) {
+        if(resultTitle != '' && resultTitle != undefined) {
+          //Show board description dialog
+          $mdDialog.show(boardDescriptionDialog).then(function(resultDescription) {
+            if(resultDescription != '' && resultDescription != undefined) {
+              //Save board
+              board.name = resultTitle;
+              board.description = resultDescription;
+              $scope.addBoard(board);
+            } else {
+              $mdToast.show($mdToast.simple().textContent("Board was not created"));
+            }
+          }, function() {
+            $mdToast.show($mdToast.simple().textContent("Board was not created"));
+          });
         } else {
-          $mdToast.show($mdToast.simple().textContent("Error: card is empty. Not created"));
+          $mdToast.show($mdToast.simple().textContent("Board was not created"));
         }
       }, function() {
-        //Dialog cancelled
-      });
-    };
-
-    //Show the dialog to create a new board
-    $scope.addNewBoardDialog = function(ev) {
-      $scope.inputDialog = { name: '', description: '' };
-      $mdDialog.show({
-        controller: kanbanController,
-        templateUrl: 'boardDialog.tmpl.html',
-        parent: angular.element(document.body),
-        targetEvent: ev,
-        clickOutsideToClose:true
-      })
-      .then(function(answer) {
-        //Dialog accepted
-        var board = {
-          name: answer.name,
-          description: answer.description,
-          owner: $window.sessionStorage.getItem('userID')
-        };
-        if(board.name != '' && board.description != '') {
-          $scope.addBoard(board); //Creates new kanban board
-        } else {
-          $mdToast.show($mdToast.simple().textContent("Error: board is empty. Not created"));
-        }
-      }, function() {
-        //Dialog cancelled
+        $mdToast.show($mdToast.simple().textContent("Board was not created"));
       });
     };
 
@@ -299,7 +295,7 @@
   };
 
   kanbanController.$inject = ['$scope', '$mdSidenav', '$log', '$mdDialog', '$mdToast',
-  '$location', '$window', 'kanbanFactory', 'dragulaService'];
+  '$location', '$window', '$interval', 'kanbanFactory', 'dragulaService'];
 
   angular.module('kanban-board')
     .controller('kanbanController', kanbanController);
