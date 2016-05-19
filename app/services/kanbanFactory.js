@@ -19,7 +19,7 @@
       return $http.put('/boards/' + boardID, board, { headers: {'x-access-token': token } });
     };
 
-    factory.removeBoard = function(boardID, token) {
+    factory.deleteBoard = function(boardID, token) {
       return $http.delete('/boards/' + boardID, { headers: {'x-access-token': token } });
     };
 

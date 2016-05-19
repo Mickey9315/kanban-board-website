@@ -1,7 +1,7 @@
 <!-- Kanban board -->
 <div layout="column" class='kanban' ng-cloak>
   <!-- Toolbar -->
-  <md-toolbar layout="row">
+  <md-toolbar layout="row" class="md-whiteframe-2dp">
     <div class="md-toolbar-tools">
       <!-- Open left drawer -->
       <md-button class="md-icon-button" aria-label="Settings" ng-click='toggleLeft()'>
@@ -37,7 +37,7 @@
       <md-button class='md-fab md-fab-bottom-right my-fab-button' ng-click="addNewBoardDialog($event)" aria-label="add board">
         <md-icon md-svg-icon="img/icons/ic_add_white_24px.svg"></md-icon>
       </md-button>
-      <md-toolbar class="md-theme-light" layout="row">
+      <md-toolbar class="md-theme-light md-whiteframe-2dp" layout="row">
         <div class="md-toolbar-tools">
           <h1>My kanban boards</h1>
         </div>
@@ -45,6 +45,15 @@
       <md-content class="scrollable-nav-content">
         <md-list>
           <md-list-item class="md-2-line" ng-repeat="board in boards" aria-label="Select board" ng-click='switchBoard(board)'>
+            <md-menu>
+              <md-button class="md-icon-button" aria-label="More" ng-click="$mdOpenMenu($event)">
+                <md-icon md-svg-icon="img/icons/ic_more_vert_grey_24px.svg"></md-icon>
+              </md-button>
+              <md-menu-content width="4">
+                <md-menu-item><md-button ng-click="editBoardDialog($event, $index, board)">Edit board</md-button></md-menu-item>
+                <md-menu-item><md-button ng-click="deleteBoardDialog($index, board)">Delete board</md-button></md-menu-item>
+              </md-menu-content>
+            </md-menu>
             <div class="md-list-item-text">
               <h3 ng-bind='board.name'></h3>
               <p ng-bind='board.description'></p>

@@ -8,7 +8,7 @@
     </div>
   </md-toolbar>
   <md-card-content>
-    <form method="post">
+    <form ng-submit="authenticate()">
       <md-content>
         <md-input-container class="md-block">
           <md-icon md-svg-src="img/icons/ic_person_black_24px.svg"></md-icon>
@@ -23,7 +23,7 @@
         <md-button class="md-primary" ng-click="goRegister()">
           Sign Up
         </md-button>
-        <md-button class="md-raised md-primary" ng-click="authenticate()">
+        <md-button type="submit" class="md-raised md-primary">
           Sign In
         </md-button>
       </div>

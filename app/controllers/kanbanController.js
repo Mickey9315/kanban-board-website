@@ -5,23 +5,12 @@
 
     //Boards array
     $scope.boards = [];
-    //Cards arrays
+    //Cards arrays for every category
     $scope.readyCards = [];
     $scope.inprogressCards = [];
     $scope.pausedCards = [];
     $scope.testingCards = [];
     $scope.doneCards = [];
-
-    //Dialog actions
-    $scope.hide = function() {
-      $mdDialog.hide();
-    };
-    $scope.cancel = function() {
-      $mdDialog.cancel();
-    };
-    $scope.answer = function(answer) {
-      $mdDialog.hide($scope.inputDialog);
-    };
 
     //Get all boards for the user
     $scope.getBoardsAndCards = function() {
@@ -120,14 +109,11 @@
 
     $scope.$on('first-bag.drag', function (e, el, container, source) {
       $scope.dragging = true;
-      console.log($scope.dragging);
     });
 
     //Handles moving cards to different containers, and editing and saving them
     $scope.$on('first-bag.drop', function (e, el, container, source) {
       $scope.dragging = false;
-      console.log($scope.dragging);
-
       var card = el.scope().card;
       if(container.parent().hasClass('ready') == true) {
         card.category = 'ready';
@@ -288,6 +274,34 @@
       }, function() {
         $mdToast.show($mdToast.simple().textContent("Board was not created"));
       });
+    };
+
+    $scope.editBoardDialog = function(ev, index, board) {
+
+    };
+
+    $scope.deleteBoardDialog = function(index, board) {
+      var confirm = $mdDialog.confirm()
+            .title('Delete board')
+            .textContent('Are you sure you want to delete this board? All associated cards will be deleted')
+            .ariaLabel('Delete board')
+            .ok('ok')
+            .cancel('cancel');
+      $mdDialog.show(confirm).then(function() {
+        kanbanFactory.deleteBoard(board._id, $window.sessionStorage.getItem('token'))
+          .success(function(response) {
+              if($scope.boards.length !== 0) {
+                $scope.boards.splice(index, 1);
+                $scope.clearBoard();
+                $scope.getCards($scope.boards[0]);
+                $scope.actualBoard = $scope.boards[0];
+                $scope.toolbarTitle = $scope.boards[0].name;
+                $scope.toggleLeft();
+            }
+          });
+        }, function() {
+          //cancel
+        });
     };
 
     //Get all user boards (and cards) when enter or refresh the application
