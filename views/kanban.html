@@ -50,7 +50,8 @@
                 <md-icon md-svg-icon="img/icons/ic_more_vert_grey_24px.svg"></md-icon>
               </md-button>
               <md-menu-content width="4">
-                <md-menu-item><md-button ng-click="editBoardDialog($event, $index, board)">Edit board</md-button></md-menu-item>
+                <md-menu-item><md-button ng-click="editBoardNameDialog($event, $index, board)">Edit name</md-button></md-menu-item>
+                <md-menu-item><md-button ng-click="editBoardDescriptionDialog($event, $index, board)">Edit description</md-button></md-menu-item>
                 <md-menu-item><md-button ng-click="deleteBoardDialog($index, board)">Delete board</md-button></md-menu-item>
               </md-menu-content>
             </md-menu>

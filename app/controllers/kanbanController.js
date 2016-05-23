@@ -105,7 +105,15 @@
         .success(function(response) {
           $scope.boards.push(response.message);
         });
-    }
+    };
+
+    //Edit board
+    $scope.editBoard = function(board) {
+      kanbanFactory.editBoard(board, $window.sessionStorage.getItem('token'))
+        .success(function(response) {
+          //Action after editing board
+        });
+    };
 
     $scope.$on('first-bag.drag', function (e, el, container, source) {
       $scope.dragging = true;
@@ -142,14 +150,14 @@
 
     //logout function
     $scope.logoutDialog = function(ev) {
-      var confirm = $mdDialog.confirm()
+      var dialog = $mdDialog.confirm()
             .title('Close session')
             .textContent('Are you sure you want to close the session?')
             .ariaLabel('Logout')
             .targetEvent(ev)
             .ok('ok')
             .cancel('cancel');
-      $mdDialog.show(confirm).then(function() {
+      $mdDialog.show(dialog).then(function() {
         kanbanFactory.logout()
           .success(function(response) {
             //remove the user token and user ID from the sessionStorage
@@ -165,7 +173,7 @@
 
     //Show the dialog to create a new card
     $scope.addNewCardDialog = function(ev) {
-      var confirm = $mdDialog.prompt()
+      var dialog = $mdDialog.prompt()
             .title('Create new card')
             .textContent('Enter the description')
             .placeholder('description')
@@ -173,7 +181,7 @@
             .targetEvent(ev)
             .ok('save')
             .cancel('cancel');
-      $mdDialog.show(confirm).then(function(result) {
+      $mdDialog.show(dialog).then(function(result) {
         var card = { content: result, category: 'ready' };
         if(card.content != '' && card.content != undefined) {
           $scope.addCard(card); //Creates new card
@@ -188,14 +196,14 @@
 
     //Show the dialog to edit a card
     $scope.editCardDialog = function(ev, index, card) {
-      var confirm = $mdDialog.prompt()
+      var dialog = $mdDialog.prompt()
             .title('Edit card')
             .placeholder('description')
             .ariaLabel('Card description')
             .targetEvent(ev)
             .ok('save')
             .cancel('cancel');
-      $mdDialog.show(confirm).then(function(result) {
+      $mdDialog.show(dialog).then(function(result) {
         if(result != '' && result != undefined) {
           card.content = result;
           $scope.editCard(card); //Edit card
@@ -210,13 +218,13 @@
 
     //Delete card in $scope array and in database
     $scope.deleteCardDialog = function(index, card) {
-      var confirm = $mdDialog.confirm()
+      var dialog = $mdDialog.confirm()
             .title('Delete card')
             .textContent('Are you sure you want to delete this card?')
             .ariaLabel('Delete card')
             .ok('ok')
             .cancel('cancel');
-      $mdDialog.show(confirm).then(function() {
+      $mdDialog.show(dialog).then(function() {
         kanbanFactory.deleteCard($scope.actualBoard._id, card, $window.sessionStorage.getItem('token'))
           .success(function(response) {
             if(card.category == 'ready')
@@ -276,18 +284,59 @@
       });
     };
 
-    $scope.editBoardDialog = function(ev, index, board) {
-
+    //Edit board name dialog
+    $scope.editBoardNameDialog = function(ev, index, board) {
+      var dialog = $mdDialog.prompt()
+            .title('Edit board name')
+            .placeholder('board name')
+            .ariaLabel('Board name')
+            .targetEvent(ev)
+            .ok('save')
+            .cancel('cancel');
+      $mdDialog.show(dialog).then(function(result) {
+        if(result != '' && result != undefined) {
+          board.name = result;
+          $scope.editBoard(board); //Edit card
+        } else {
+          $mdToast.show($mdToast.simple().textContent("Board was not edited"));
+        }
+      }, function() {
+        //Empty description - Doesn't create card
+        $mdToast.show($mdToast.simple().textContent("Board was not edited"));
+      });
     };
 
+    //Edit board description dialog
+    $scope.editBoardDescriptionDialog = function(ev, index, board) {
+      var dialog = $mdDialog.prompt()
+            .title('Edit board description')
+            .placeholder('board description')
+            .ariaLabel('Board description')
+            .targetEvent(ev)
+            .ok('save')
+            .cancel('cancel');
+      $mdDialog.show(dialog).then(function(result) {
+        if(result != '' && result != undefined) {
+          board.description = result;
+          $scope.editBoard(board); //Edit card
+        } else {
+          $mdToast.show($mdToast.simple().textContent("Board was not edited"));
+        }
+      }, function() {
+        //Empty description - Doesn't create card
+        $mdToast.show($mdToast.simple().textContent("Board was not edited"));
+      });
+    };
+
+    //Delete board dialog
     $scope.deleteBoardDialog = function(index, board) {
-      var confirm = $mdDialog.confirm()
+      var dialog = $mdDialog.confirm()
             .title('Delete board')
             .textContent('Are you sure you want to delete this board? All associated cards will be deleted')
             .ariaLabel('Delete board')
             .ok('ok')
             .cancel('cancel');
-      $mdDialog.show(confirm).then(function() {
+      $mdDialog.show(dialog).then(function() {
         kanbanFactory.deleteBoard(board._id, $window.sessionStorage.getItem('token'))
           .success(function(response) {
               if($scope.boards.length !== 0) {

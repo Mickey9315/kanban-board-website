@@ -15,8 +15,8 @@
       return $http.get('/boards/' + boardID, { headers: {'x-access-token': token } });
     };
 
-    factory.editBoard = function(boardID, token) {
-      return $http.put('/boards/' + boardID, board, { headers: {'x-access-token': token } });
+    factory.editBoard = function(board, token) {
+      return $http.put('/boards/' + board._id, board, { headers: {'x-access-token': token } });
     };
 
     factory.deleteBoard = function(boardID, token) {
