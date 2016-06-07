@@ -3,6 +3,10 @@
   var kanbanController = function($scope, $mdSidenav, $log, $mdDialog, $mdToast,
     $location, $window, $interval, kanbanFactory, dragulaService) {
 
+      this.isOpen = false;
+      this.selectedMode = 'md-fling';
+      this.selectedDirection = 'up';
+
     //Boards array
     $scope.boards = [];
     //Cards arrays for every category

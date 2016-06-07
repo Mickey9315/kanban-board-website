@@ -1,5 +1,5 @@
 <!-- Kanban board -->
-<div layout="column" class='kanban' ng-cloak>
+<div ng-controller="kanbanController as kanban" layout="column" class='kanban' ng-cloak>
   <!-- Toolbar -->
   <md-toolbar layout="row" class="md-whiteframe-2dp">
     <div class="md-toolbar-tools">
@@ -28,15 +28,31 @@
     </div>
   </md-toolbar>
   <md-content id="kanbanlayout" layout="row" layout-xs="column">
-    <!-- Add new card -->
-    <md-button class='md-fab md-fab-bottom-right my-fab-button' ng-click="addNewCardDialog($event)" aria-label="add card">
-      <md-icon md-svg-icon="img/icons/ic_add_white_24px.svg"></md-icon>
-    </md-button>
+    <div layout="row" layout-align="center center">
+      <md-fab-speed-dial md-open="kanban.isOpen" md-direction="{{kanban.selectedDirection}}"
+                         ng-class="kanban.selectedMode" class="md-fab-bottom-right">
+        <md-fab-trigger>
+          <md-button aria-label="menu" class="md-fab">
+            <md-tooltip md-direction="left" md-visible="tooltipVisible">Create</md-tooltip>
+            <md-icon md-svg-icon="img/icons/ic_add_white_24px.svg"></md-icon>
+          </md-button>
+        </md-fab-trigger>
+        <md-fab-actions>
+          <!-- Add new card -->
+          <md-button aria-label="Create card" class="md-fab md-primary md-mini" ng-click="addNewCardDialog($event)">
+            <md-tooltip md-direction="left" md-visible="tooltipVisible">Create card</md-tooltip>
+            <md-icon md-svg-icon="img/icons/ic_add_white_24px.svg"></md-icon>
+          </md-button>
+          <md-button aria-label="Create board" class="md-fab md-primary md-mini"  ng-click="addNewBoardDialog($event)">
+            <md-tooltip md-direction="left" md-visible="tooltipVisible">Create board</md-tooltip>
+            <md-icon md-svg-icon="img/icons/ic_add_white_24px.svg"></md-icon>
+          </md-button>
+        </md-fab-actions>
+      </md-fab-speed-dial>
+    </div>
+
     <!-- Left sidenav -->
     <md-sidenav class="md-sidenav-left" md-component-id="left">
-      <md-button class='md-fab md-fab-bottom-right my-fab-button' ng-click="addNewBoardDialog($event)" aria-label="add board">
-        <md-icon md-svg-icon="img/icons/ic_add_white_24px.svg"></md-icon>
-      </md-button>
       <md-toolbar class="md-theme-light md-whiteframe-2dp" layout="row">
         <div class="md-toolbar-tools">
           <h1>My kanban boards</h1>
@@ -45,6 +61,10 @@
       <md-content class="scrollable-nav-content">
         <md-list>
           <md-list-item class="md-2-line" ng-repeat="board in boards" aria-label="Select board" ng-click='switchBoard(board)'>
+            <div class="md-list-item-text">
+              <h3 ng-bind='board.name'></h3>
+              <p ng-bind='board.description'></p>
+            </div>
             <md-menu>
               <md-button class="md-icon-button" aria-label="More" ng-click="$mdOpenMenu($event)">
                 <md-icon md-svg-icon="img/icons/ic_more_vert_grey_24px.svg"></md-icon>
@@ -55,10 +75,6 @@
                 <md-menu-item><md-button ng-click="deleteBoardDialog($index, board)">Delete board</md-button></md-menu-item>
               </md-menu-content>
             </md-menu>
-            <div class="md-list-item-text">
-              <h3 ng-bind='board.name'></h3>
-              <p ng-bind='board.description'></p>
-            </div>
             <md-divider ng-if="!$last"></md-divider>
           </md-list-item>
         </md-list>
