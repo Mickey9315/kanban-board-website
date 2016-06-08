@@ -3,10 +3,6 @@
   var kanbanController = function($scope, $mdSidenav, $log, $mdDialog, $mdToast,
     $location, $window, $interval, kanbanFactory, dragulaService) {
 
-      this.isOpen = false;
-      this.selectedMode = 'md-fling';
-      this.selectedDirection = 'up';
-
     //Boards array
     $scope.boards = [];
     //Cards arrays for every category
@@ -15,6 +11,11 @@
     $scope.pausedCards = [];
     $scope.testingCards = [];
     $scope.doneCards = [];
+
+    //FAB speed dial options
+    this.isOpen = false;
+    this.selectedMode = 'md-fling';
+    this.selectedDirection = 'up';
 
     //Get all boards for the user
     $scope.getBoardsAndCards = function() {
@@ -45,16 +46,23 @@
 
     //Check the new card category to save
     $scope.checkCategory = function(card) {
-      if(card.category == 'ready')
-        $scope.readyCards.push(card);
-      if(card.category == 'inprogress')
-        $scope.inprogressCards.push(card);
-      if(card.category == 'paused')
-        $scope.pausedCards.push(card);
-      if(card.category == 'testing')
-        $scope.testingCards.push(card);
-      if(card.category == 'done')
-        $scope.doneCards.push(card);
+      switch (card.category) {
+        case 'ready':
+          $scope.readyCards.push(card);
+          break;
+        case 'inprogress':
+          $scope.inprogressCards.push(card);
+          break;
+        case 'paused':
+          $scope.pausedCards.push(card);
+          break;
+        case 'testing':
+          $scope.testingCards.push(card);
+          break;
+        case 'done':
+          $scope.doneCards.push(card);
+          break;
+      }
     };
 
     //Get the cards for a boards and show them using the factory
@@ -130,16 +138,16 @@
       if(container.parent().hasClass('ready') == true) {
         card.category = 'ready';
       }
-      if(container.parent().hasClass('inprogress') == true) {
+      else if(container.parent().hasClass('inprogress') == true) {
         card.category = 'inprogress';
       }
-      if(container.parent().hasClass('paused') == true) {
+      else if(container.parent().hasClass('paused') == true) {
         card.category = 'paused';
       }
-      if(container.parent().hasClass('testing') == true) {
+      else if(container.parent().hasClass('testing') == true) {
         card.category = 'testing';
       }
-      if(container.parent().hasClass('done') == true) {
+      else if(container.parent().hasClass('done') == true) {
         card.category = 'done';
       }
       $scope.editCard(card); //Edita la tarjeta y la guarda

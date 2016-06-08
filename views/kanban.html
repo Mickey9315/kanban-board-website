@@ -27,30 +27,28 @@
       </md-menu>
     </div>
   </md-toolbar>
+  <md-fab-speed-dial md-open="kanban.isOpen" md-direction="{{kanban.selectedDirection}}"
+                      ng-class="kanban.selectedMode" class="md-fab-bottom-right speed-dial">
+    <md-fab-trigger>
+      <md-button aria-label="menu" class="md-fab">
+        <md-tooltip md-direction="left" md-visible="tooltipVisible">Create</md-tooltip>
+        <md-icon md-svg-icon="img/icons/ic_add_white_24px.svg"></md-icon>
+      </md-button>
+    </md-fab-trigger>
+    <md-fab-actions>
+      <!-- Add new card -->
+      <md-button aria-label="Create card" class="md-fab md-primary md-mini" ng-click="addNewCardDialog($event)">
+        <md-tooltip md-direction="left" md-visible="tooltipVisible">Create card</md-tooltip>
+        <md-icon md-svg-icon="img/icons/ic_add_white_24px.svg"></md-icon>
+      </md-button>
+      <!-- Add new board -->
+      <md-button aria-label="Create board" class="md-fab md-primary md-mini"  ng-click="addNewBoardDialog($event)">
+        <md-tooltip md-direction="left" md-visible="tooltipVisible">Create board</md-tooltip>
+        <md-icon md-svg-icon="img/icons/ic_add_white_24px.svg"></md-icon>
+      </md-button>
+    </md-fab-actions>
+  </md-fab-speed-dial>
   <md-content id="kanbanlayout" layout="row" layout-xs="column">
-    <div layout="row" layout-align="center center">
-      <md-fab-speed-dial md-open="kanban.isOpen" md-direction="{{kanban.selectedDirection}}"
-                         ng-class="kanban.selectedMode" class="md-fab-bottom-right">
-        <md-fab-trigger>
-          <md-button aria-label="menu" class="md-fab">
-            <md-tooltip md-direction="left" md-visible="tooltipVisible">Create</md-tooltip>
-            <md-icon md-svg-icon="img/icons/ic_add_white_24px.svg"></md-icon>
-          </md-button>
-        </md-fab-trigger>
-        <md-fab-actions>
-          <!-- Add new card -->
-          <md-button aria-label="Create card" class="md-fab md-primary md-mini" ng-click="addNewCardDialog($event)">
-            <md-tooltip md-direction="left" md-visible="tooltipVisible">Create card</md-tooltip>
-            <md-icon md-svg-icon="img/icons/ic_add_white_24px.svg"></md-icon>
-          </md-button>
-          <md-button aria-label="Create board" class="md-fab md-primary md-mini"  ng-click="addNewBoardDialog($event)">
-            <md-tooltip md-direction="left" md-visible="tooltipVisible">Create board</md-tooltip>
-            <md-icon md-svg-icon="img/icons/ic_add_white_24px.svg"></md-icon>
-          </md-button>
-        </md-fab-actions>
-      </md-fab-speed-dial>
-    </div>
-
     <!-- Left sidenav -->
     <md-sidenav class="md-sidenav-left" md-component-id="left">
       <md-toolbar class="md-theme-light md-whiteframe-2dp" layout="row">
