@@ -51,12 +51,20 @@
   <md-content id="kanbanlayout" layout="row" layout-xs="column">
     <!-- Left sidenav -->
     <md-sidenav class="md-sidenav-left" md-component-id="left">
-      <md-toolbar class="md-theme-light md-whiteframe-2dp" layout="row">
-        <div class="md-toolbar-tools">
-          <h1>My kanban boards</h1>
+      <md-toolbar class="md-tall md-hue-2">
+        <span flex></span>
+        <div layout="column" class="md-toolbar-tools-bottom inset">
+          <span></span>
+          <img src="img/ic_launcher.png" id="kanbanlogo"/>
+          <div> {{kanban.username}} </div>
+          <div> {{kanban.email}} </div>
         </div>
       </md-toolbar>
-      <md-content class="scrollable-nav-content">
+      <md-toolbar class="md-theme-light md-whiteframe-2dp" layout="row">
+        <div class="md-toolbar-tools" id="kanban-boards-label">
+          Kanban boards
+        </div>
+      </md-toolbar>
         <md-list>
           <md-list-item class="md-2-line" ng-repeat="board in boards" aria-label="Select board" ng-click='switchBoard(board)'>
             <div class="md-list-item-text">
@@ -76,7 +84,6 @@
             <md-divider ng-if="!$last"></md-divider>
           </md-list-item>
         </md-list>
-      </md-content>
     </md-sidenav>
     <!-- Ready cards -->
     <div flex-gt-xs="25" class='ready'>

@@ -66,8 +66,19 @@ md-whiteframe {
   height:100%;
 }
 
-md-toolbar-tools {
-  border-radius: 5px;
+#kanban-boards-label {
+  text-align: center;
+  display: block;
+  vertical-align: middle;
+  line-height: 60px;
+}
+
+.md-toolbar-tools-bottom {
+  font-size: medium;
+  text-align: center;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 #ready-title {
@@ -150,4 +161,9 @@ md-toolbar-tools {
   right: 0px;
   width: 100%;
   overflow-y: scroll;
+}
+
+#kanbanlogo {
+  height: 70px;
+  width: 70px;
 }

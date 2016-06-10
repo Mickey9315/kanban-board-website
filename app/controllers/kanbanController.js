@@ -17,6 +17,10 @@
     this.selectedMode = 'md-fling';
     this.selectedDirection = 'up';
 
+    //Username and email
+    this.username = $window.sessionStorage.getItem('username');
+    this.email = $window.sessionStorage.getItem('email');
+
     //Get all boards for the user
     $scope.getBoardsAndCards = function() {
       kanbanFactory.getBoards($window.sessionStorage.getItem('userID'),
