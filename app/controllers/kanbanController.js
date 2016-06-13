@@ -97,6 +97,23 @@
         });
     };
 
+    //Delete card
+    $scope.deleteCard = function(index, card) {
+      kanbanFactory.deleteCard($scope.actualBoard._id, card, $window.sessionStorage.getItem('token'))
+        .success(function(response) {
+          if(card.category == 'ready')
+            $scope.readyCards.splice(index, 1);
+          else if(card.category == 'inprogress')
+            $scope.inprogressCards.splice(index, 1);
+          else if(card.category == 'paused')
+            $scope.pausedCards.splice(index, 1);
+          else if(card.category == 'testing')
+            $scope.testingCards.splice(index, 1);
+          else if(card.category == 'done')
+            $scope.doneCards.splice(index, 1);
+        });
+    };
+
     $scope.clearBoard = function() {
       //Clear cards arrays
       $scope.readyCards = [];
@@ -128,6 +145,21 @@
       kanbanFactory.editBoard(board, $window.sessionStorage.getItem('token'))
         .success(function(response) {
           //Action after editing board
+        });
+    };
+
+    //Delete board
+    $scope.deleteBoard = function(index, board) {
+      kanbanFactory.deleteBoard(board._id, $window.sessionStorage.getItem('token'))
+        .success(function(response) {
+            if($scope.boards.length !== 0) {
+              $scope.boards.splice(index, 1);
+              $scope.clearBoard();
+              $scope.getCards($scope.boards[0]);
+              $scope.actualBoard = $scope.boards[0];
+              $scope.toolbarTitle = $scope.boards[0].name;
+              $scope.toggleLeft();
+          }
         });
     };
 
@@ -241,19 +273,7 @@
             .ok('ok')
             .cancel('cancel');
       $mdDialog.show(dialog).then(function() {
-        kanbanFactory.deleteCard($scope.actualBoard._id, card, $window.sessionStorage.getItem('token'))
-          .success(function(response) {
-            if(card.category == 'ready')
-              $scope.readyCards.splice(index, 1);
-            else if(card.category == 'inprogress')
-              $scope.inprogressCards.splice(index, 1);
-            else if(card.category == 'paused')
-              $scope.pausedCards.splice(index, 1);
-            else if(card.category == 'testing')
-              $scope.testingCards.splice(index, 1);
-            else if(card.category == 'done')
-              $scope.doneCards.splice(index, 1);
-          });
+        $scope.deleteCard(index, card);
       }, function() {
         //cancel
       });
@@ -353,17 +373,7 @@
             .ok('ok')
             .cancel('cancel');
       $mdDialog.show(dialog).then(function() {
-        kanbanFactory.deleteBoard(board._id, $window.sessionStorage.getItem('token'))
-          .success(function(response) {
-              if($scope.boards.length !== 0) {
-                $scope.boards.splice(index, 1);
-                $scope.clearBoard();
-                $scope.getCards($scope.boards[0]);
-                $scope.actualBoard = $scope.boards[0];
-                $scope.toolbarTitle = $scope.boards[0].name;
-                $scope.toggleLeft();
-            }
-          });
+        $scope.deleteBoard(index, board);
         }, function() {
           //cancel
         });
