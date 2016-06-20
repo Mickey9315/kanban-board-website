@@ -13,12 +13,12 @@
 
     factory.authenticate = function(username, password) {
       var jsonObject = { username: username, password: password };
-      return $http.post('/users/authenticate', jsonObject);
+      return $http.post('/users/authenticate', jsonObject, { headers: {'x-platform': 'web' } });
     };
 
     factory.register = function(username, email, password) {
       var jsonObject = { username: username, password: password, email: email };
-      return $http.post('/users/register', jsonObject);
+      return $http.post('/users/register', jsonObject, { headers: {'x-platform': 'web' } });
     };
 
     return factory;

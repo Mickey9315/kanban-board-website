@@ -26,7 +26,7 @@ app.use(bodyParser.urlencoded({"extended" : false}));
 //login with existing user
 // body: username, password
 // params: ...
-// headers: ...
+// headers: x-platform
 router.post('/users/authenticate', function(req, res) {
   User.findOne({
     username: req.body.username
@@ -42,11 +42,21 @@ router.post('/users/authenticate', function(req, res) {
           res.json({ "success": false, "message": 'Authentication failed. Wrong password.' });
         } else {
           //if password is right, create a token
-          var token = jwt.sign(user, app.get('secret'), {
-            expiresIn: 86400 //expires in 24 hours
-          });
-          res.json({ "success": true, "message": 'Successfully authenticated',
-          "token": token, "user": user });
+          if(req.headers['x-platform'].toString().trim() === 'web') {
+            //if platform is web, token expires
+            var token = jwt.sign(user, app.get('secret'), {
+              expiresIn: 86400 //expires in 24 hours
+            });
+            res.json({ "success": true, "message": 'Successfully authenticated',
+            "token": token, "user": user });
+          } else if(req.headers['x-platform'].toString().trim() === 'android') {
+            //if platform is android, token never expires
+            var token = jwt.sign(user, app.get('secret'), {});
+            res.json({ "success": true, "message": 'Successfully authenticated',
+            "token": token, "user": user });
+          } else {
+            res.json({ "success": false, "message": 'Authentication failed. Header x-platform is not valid' });
+          }
         }
       });
     }
@@ -56,7 +66,7 @@ router.post('/users/authenticate', function(req, res) {
 //register a new user
 // body: username, email, password
 // params: ...
-// headers: ...
+// headers: platform
 router.post('/users/register', function(req, res) {
   User.findOne({
     username: req.body.username
@@ -72,11 +82,21 @@ router.post('/users/register', function(req, res) {
           newUser.save(function(err) { //Save the new user
             if (err) throw err;
             //If user is registered successfully, create a token
-            var token = jwt.sign(user, app.get('secret'), {
-              expiresIn: 86400 //expires in 24 hours
-            });
-            res.json({ "success": true, "message": 'User registered successfully',
-            "token": token, "user": newUser });
+            if(req.headers['x-platform'].toString().trim() === 'web') {
+              //if platform is web, token expires
+              var token = jwt.sign(user, app.get('secret'), {
+                expiresIn: 86400 //expires in 24 hours
+              });
+              res.json({ "success": true, "message": 'User registered successfully',
+              "token": token, "user": newUser });
+            } else if(req.headers['x-platform'].toString().trim() === 'android') {
+              //if platform is android, token never expires
+              var token = jwt.sign(user, app.get('secret'), {});
+              res.json({ "success": true, "message": 'User registered successfully',
+              "token": token, "user": newUser });
+            } else {
+              res.json({ "success": false, "message": 'Registration failed. Header x-platform is not valid' });
+            }
           });
         }
         else {
