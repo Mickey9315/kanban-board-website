@@ -108,6 +108,22 @@ router.post('/users/register', function(req, res) {
   });
 });
 
+//Close the current session of the user (delete token on the client side)
+// body: ...
+// params: ...
+// headers: ...
+router.post('/users/logout', function(req, res) {
+  res.json({ "success": true, "message": 'User logout successfully' });
+});
+
+//Check if server is on (request used in android application)
+// body: ...
+// params: ...
+// headers: ...
+router.get('/checkserverstatus', function(req, res) {
+  res.json({ "success": true, "message": 'Server is on' });
+});
+
 /*================================================
  route middleware to authenticate and check token
        All the requests below need token
@@ -388,6 +404,7 @@ router.route('/boards/owner/:id')
       }
     });
   });
+
 
 //Start the server
 app.use(express.static(__dirname + '/'), router);
