@@ -66,7 +66,7 @@ router.post('/users/authenticate', function(req, res) {
 //register a new user
 // body: username, email, password
 // params: ...
-// headers: platform
+// headers: x-platform
 router.post('/users/register', function(req, res) {
   User.findOne({
     username: req.body.username
@@ -106,14 +106,6 @@ router.post('/users/register', function(req, res) {
       res.json({ "success": false, "message": 'Registration failed. User already exists.' });
     }
   });
-});
-
-//close the current session of the user (delete token on the client side)
-// body: ...
-// params: ...
-// headers: ...
-router.post('/users/logout', function(req, res) {
-  res.json({ "success": true, "message": 'User logout successfully' });
 });
 
 /*================================================
@@ -396,7 +388,6 @@ router.route('/boards/owner/:id')
       }
     });
   });
-
 
 //Start the server
 app.use(express.static(__dirname + '/'), router);
