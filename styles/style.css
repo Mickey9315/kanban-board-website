@@ -10,6 +10,14 @@ md-whiteframe {
   border-radius: 5px;
 }
 
+md-content {
+  background-color: #FFFFFF;
+}
+
+label {
+  text-align: left;
+}
+
 .kanban-list {
   padding: 5dp;
   margin: 2%;
