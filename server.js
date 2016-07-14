@@ -108,7 +108,7 @@ router.post('/users/register', function(req, res) {
                       to: newUser.email, // list of receivers
                       subject: 'Taskban account activation', // Subject line
                       html: 'To activate your account, click in the following URL:</p><p>'
-                      + config.url + ':' + config.port + '/users/email-verification/'
+                      + config.url + '/users/email-verification/'
                       + createdTempUser.GENERATED_VERIFYING_URL +  '</p>'// html body
                   };
                   // send mail with defined transport object
