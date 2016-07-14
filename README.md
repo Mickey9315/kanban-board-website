@@ -26,6 +26,7 @@ module.exports = {
 }
 ```
 * Set the NODE_ENV variable to *development*.
+* Set the NODE_TLS_REJECT_UNAUTHORIZED variable to 0 to send signup validation email.
 * Start the web application with ``node server.js``.
 
 ### License
