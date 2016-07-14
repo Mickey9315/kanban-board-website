@@ -11,16 +11,12 @@
       userFactory.register($scope.username, $scope.email, $scope.password)
         .success(function(response) {
           if(response.success) { //User registered
-            //Save the returned JSON web token into the sessionStorage
-            $window.sessionStorage.token = response.token;
-            //Save the returned user ID into the sessionStorage
-            $window.sessionStorage.userID = response.user._id;
-            //Save the username
-            $window.sessionStorage.username = response.user.username;
-            //Save the email
-            $window.sessionStorage.email = response.user.email;
-            //Go to kanban application
-            $location.path('/kanban');
+            //Show a message to activate the user account
+            $mdToast.show($mdToast.simple()
+            .textContent("We have sent you an email to activate your Taskban account")
+            .action('Ok')
+            .highlightAction(true)
+            .highlightClass('md-accent'));
           } else { //register error
             $mdToast.show($mdToast.simple().textContent("Error: " + response.message));
           }

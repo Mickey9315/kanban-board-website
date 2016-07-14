@@ -18,7 +18,7 @@
 
     factory.register = function(username, email, password) {
       var jsonObject = { username: username, password: password, email: email };
-      return $http.post('/users/register', jsonObject, { headers: {'x-platform': 'web' } });
+      return $http.post('/users/register', jsonObject);
     };
 
     return factory;

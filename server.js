@@ -6,7 +6,11 @@ var router = express.Router();
 var morgan = require('morgan');
 var mongoose = require('mongoose');
 var jwt = require('jsonwebtoken');
+var validator = require('email-validator');
+var nodemailer = require('nodemailer');
+var randtoken = require('rand-token');
 var User = require('./models/user');
+var TempUser = require('./models/tempUser');
 var Board = require('./models/board');
 var Card = require('./models/card');
 var env = process.env.NODE_ENV;
@@ -18,6 +22,17 @@ app.set('secret', config.secret); //secret variable
 app.use(morgan("dev")); //log the requests to the console
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({"extended" : false}));
+
+var smtpConfig = {
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // use SSL
+    auth: {
+        user: config.email,
+        pass: config.password
+    }
+};
+var transporter = nodemailer.createTransport(smtpConfig);
 
 /*===========================
           User API
@@ -68,42 +83,90 @@ router.post('/users/authenticate', function(req, res) {
 // params: ...
 // headers: x-platform
 router.post('/users/register', function(req, res) {
-  User.findOne({
-    username: req.body.username
-  }, function(err, user) {
+  User.findOne({ username: req.body.username }, function(err, user) {
     if (err) throw err;
-    if (!user) { //If user does not exists
-      var newUser = new User({ username: req.body.username,
-        email: req.body.email,
-        password: req.body.password
-      });
-      if(newUser.username !== undefined && newUser.email !== undefined
-        && newUser.password !== undefined) {
-          newUser.save(function(err) { //Save the new user
-            if (err) throw err;
-            //If user is registered successfully, create a token
-            if(req.headers['x-platform'].toString().trim() === 'web') {
-              //if platform is web, token expires
-              var token = jwt.sign(user, app.get('secret'), {
-                expiresIn: 86400 //expires in 24 hours
+    if (!user) { //If user with this username does not exists
+      User.findOne({ email: req.body.email }, function(err, user2) {
+        if (err) throw err;
+        if (!user2) { //If user with this email does not exists
+          var newUser = new TempUser({
+            username: req.body.username,
+            email: req.body.email,
+            password: req.body.password
+          });
+          if(newUser.username !== undefined && newUser.email !== undefined
+            && newUser.password !== undefined && validator.validate(req.body.email)) {
+              //Create new temp user (need to be validated by email)
+              newUser.GENERATED_VERIFYING_URL = randtoken.generate(48);
+              TempUser.create(newUser, function(err, createdTempUser) {
+                if(err) {
+                  res.json({ "success": false, "message": 'Error creating temporal user' });
+                } else {
+                  //Send email to the user
+                  var mailOptions = {
+                      from: '"Taskban" <taskbanapp@gmail.com>', // sender address
+                      to: newUser.email, // list of receivers
+                      subject: 'Taskban account activation', // Subject line
+                      html: 'To activate your account, click in the following URL:</p><p>'
+                      + config.url + ':' + config.port + '/users/email-verification/'
+                      + createdTempUser.GENERATED_VERIFYING_URL +  '</p>'// html body
+                  };
+                  // send mail with defined transport object
+                  transporter.sendMail(mailOptions, function(error, info){
+                    if(error){
+                      return console.log(error);
+                    } else {
+                      res.json({ "success": true, "message": 'Temporal user registered. Need email activation' });
+                      transporter.close();
+                    }
+                  });
+                }
               });
-              res.json({ "success": true, "message": 'User registered successfully',
-              "token": token, "user": newUser });
-            } else if(req.headers['x-platform'].toString().trim() === 'android') {
-              //if platform is android, token never expires
-              var token = jwt.sign(user, app.get('secret'), {});
-              res.json({ "success": true, "message": 'User registered successfully',
-              "token": token, "user": newUser });
-            } else {
-              res.json({ "success": false, "message": 'Registration failed. Header x-platform is not valid' });
             }
+            else {
+              res.json({ "success": false, "message": 'User not valid' });
+            }
+        } else { //If user with this email already exists
+          res.json({ "success": false, "message": 'Registration failed. Email already in use.' });
+        }
+      });
+    }  else if (user) { //If user exists
+      res.json({ "success": false, "message": 'Registration failed. Username already exists.' });
+    }
+  });
+});
+
+//Verify and activate user account
+router.get('/users/email-verification/:url', function(req, res) {
+  TempUser.findOneAndRemove({GENERATED_VERIFYING_URL: req.params.url}, function(err, tempUser) {
+    if(err) {
+      res.json({ "success": false, "message": 'Temporal user with this URL not found' });
+    } else if(tempUser != null) {
+      var newUser = new User({
+        username: tempUser.username,
+        email: tempUser.email,
+        password: tempUser.password
+      });
+      newUser.save(function(err) { //Save the new user
+        if (err) {
+          res.json({ "success": false, "message": 'Error activating user' });
+        } else {
+          //Send email to the user
+          var mailOptions = {
+              from: '"Taskban" <taskbanapp@gmail.com>', // sender address
+              to: newUser.email, // list of receivers
+              subject: 'Taskban account activation', // Subject line
+              text: 'Your account has been successfully activated. Now you can login with your account. Enjoy Taskban!'
+          };
+          transporter.sendMail(mailOptions, function(error, info){
+            if(error) return console.log(error);
+            res.json({ "success": true, "message": 'User successfully registered and activated' });
+            transporter.close();
           });
         }
-        else {
-          res.json({ "success": false, "message": 'User not valid' });
-        }
-    } else if (user) { //If user exists
-      res.json({ "success": false, "message": 'Registration failed. User already exists.' });
+      });
+    } else {
+      res.json({ "success": false, "message": 'Error activating user' });
     }
   });
 });
