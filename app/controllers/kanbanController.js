@@ -21,6 +21,18 @@
     this.username = $window.sessionStorage.getItem('username');
     this.email = $window.sessionStorage.getItem('email');
 
+    //Error dialog
+    $scope.showAlert = function() {
+    $mdDialog.show(
+      $mdDialog.alert()
+        .clickOutsideToClose(false)
+        .title('Error')
+        .textContent('There is a network error. Check your connection.')
+        .ariaLabel('Error dialog')
+        .ok('Ok')
+      );
+    };
+
     //Get all boards for the user
     $scope.getBoardsAndCards = function() {
       kanbanFactory.getBoards($window.sessionStorage.getItem('userID'),
@@ -46,6 +58,9 @@
           }
         }
       })
+      .error(function(response, status) {
+        $scope.showAlert();
+      });
     };
 
     //Check the new card category to save
@@ -78,6 +93,9 @@
             $scope.checkCategory(card);
           });
         })
+        .error(function(response, status) {
+          $scope.showAlert();
+        });
     };
 
     //Create new card
@@ -86,6 +104,9 @@
         .success(function(response) {
           //Action after creating the card
           $scope.checkCategory(response.message);
+        })
+        .error(function(response, status) {
+          $scope.showAlert();
         });
     };
 
@@ -94,7 +115,10 @@
       kanbanFactory.editCard($scope.actualBoard._id, card, $window.sessionStorage.getItem('token'))
         .success(function(response) {
           //Action after editing card
-        });
+        })
+        .error(function(response, status) {
+          $scope.showAlert();
+        });;
     };
 
     //Delete card
@@ -111,7 +135,10 @@
             $scope.testingCards.splice(index, 1);
           else if(card.category == 'done')
             $scope.doneCards.splice(index, 1);
-        });
+        })
+        .error(function(response, status) {
+          $scope.showAlert();
+        });;
     };
 
     $scope.clearBoard = function() {
@@ -137,7 +164,10 @@
       kanbanFactory.createBoard(board, $window.sessionStorage.getItem('token'))
         .success(function(response) {
           $scope.boards.push(response.message);
-        });
+        })
+        .error(function(response, status) {
+          $scope.showAlert();
+        });;
     };
 
     //Edit board
@@ -145,7 +175,10 @@
       kanbanFactory.editBoard(board, $window.sessionStorage.getItem('token'))
         .success(function(response) {
           //Action after editing board
-        });
+        })
+        .error(function(response, status) {
+          $scope.showAlert();
+        });;
     };
 
     //Delete board
@@ -160,7 +193,10 @@
               $scope.toolbarTitle = $scope.boards[0].name;
               $scope.toggleLeft();
           }
-        });
+        })
+        .error(function(response, status) {
+          $scope.showAlert();
+        });;
     };
 
     $scope.$on('first-bag.drag', function (e, el, container, source) {
@@ -213,7 +249,10 @@
             $window.sessionStorage.removeItem('userID');
             //go to login page
             $location.path('/login');
-          });
+          })
+          .error(function(response, status) {
+            $scope.showAlert();
+          });;
       }, function() {
         //cancel
       });

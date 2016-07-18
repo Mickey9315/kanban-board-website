@@ -1,9 +1,21 @@
 (function() {
 
-  var loginController = function($scope, $location, $mdToast, $window, userFactory) {
+  var loginController = function($scope, $location, $mdDialog, $mdToast, $window, userFactory) {
 
     $scope.username = this.username;
     $scope.password = this.password;
+
+    //Error dialog
+    $scope.showAlert = function() {
+    $mdDialog.show(
+      $mdDialog.alert()
+        .clickOutsideToClose(false)
+        .title('Error')
+        .textContent('There is a network error. Check your connection.')
+        .ariaLabel('Error dialog')
+        .ok('Ok')
+      );
+    };
 
     //Login function
     $scope.authenticate = function() {
@@ -23,6 +35,9 @@
           } else { //authentication error
             $mdToast.show($mdToast.simple().textContent("Error: " + response.message));
           }
+        })
+        .error(function(response, status) {
+          $scope.showAlert();
         });
     };
 
@@ -33,7 +48,7 @@
 
   };
 
-  loginController.$inject = ['$scope', '$location', '$mdToast', '$window', 'userFactory'];
+  loginController.$inject = ['$scope', '$location', '$mdDialog', '$mdToast', '$window', 'userFactory'];
 
   angular.module('kanban-board')
     .controller('loginController', loginController);
